@@ -1,0 +1,716 @@
+/* =============================================================================
+   CMER&TI — three-dimensional components
+   =============================================================================
+   Real CSS 3D: perspective, transform-style: preserve-3d, and rotation about
+   the X, Y and Z axes. No WebGL, no library, no payload — which matters on a
+   government site reached over patchy rural connections.
+
+   Every colour is a variable from base.css. The palette is untouched.
+
+   Contents
+     1  tilt      pointer-driven card tilt, applied site-wide
+     2  ring3d    rotating year wheel (the six muga crops)
+     3  cycle3d   life-cycle stages on a tilted orbit
+     4  prism3d   fibre cross-sections as extruded solids
+     5  flow3d    isometric process chain
+     6  stack3d   layered depth panels
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ 1 tilt
+
+   Cards lean towards the pointer. --rx/--ry are written by js/three-d.js.
+   The rotation is deliberately small: 6 degrees reads as a physical object
+   catching the light, 20 degrees reads as a gimmick and makes text blurry. */
+
+.tilt3d{
+  transform:perspective(900px)
+            rotateX(var(--rx,0deg))
+            rotateY(var(--ry,0deg))
+            translateZ(0);
+  transform-style:preserve-3d;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+  will-change:transform;
+}
+.tilt3d.is-tilting{transition:transform .08s linear, box-shadow .35s ease}
+
+/* effects.css lifts these same cards with transform:translateY(-3px) on
+   hover. Two transform declarations do not merge — the winner replaces the
+   loser outright — so the lift would silently cancel the tilt. This rule
+   restates both together at matching specificity, and this file loads after
+   effects.css, so it takes precedence. */
+.tilt3d:hover{
+  transform:perspective(900px)
+            rotateX(var(--rx,0deg))
+            rotateY(var(--ry,0deg))
+            translateY(-3px);
+  box-shadow:0 22px 44px rgba(122,20,66,.20);
+}
+
+/* Content lifted off the card face, so it parallaxes against the background
+   as the card turns — the cue that actually sells depth. */
+.tilt3d > *{transform:translateZ(18px)}
+
+
+/* --------------------------------------------------------------- 2 ring3d
+
+   A year as a wheel. Each crop sits on the rim, rotated into place about the
+   Y axis, so the ring genuinely turns in space rather than being a flat disc
+   with a drop shadow. */
+
+.ring3d-stage{
+  perspective:1200px;
+  height:340px; margin:1.5rem 0 2rem;
+  display:grid; place-items:center;
+}
+.ring3d{
+  position:relative; width:210px; height:210px;
+  transform-style:preserve-3d;
+  transform:rotateX(-16deg) rotateY(var(--spin,0deg));
+  animation:ring3dSpin 42s linear infinite;
+}
+.ring3d-stage:hover .ring3d{animation-play-state:paused}
+@keyframes ring3dSpin{to{transform:rotateX(-16deg) rotateY(360deg)}}
+
+.ring3d__face{
+  position:absolute; top:50%; left:50%;
+  width:150px; margin:-46px 0 0 -75px;
+  padding:10px 12px; border-radius:9px;
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-top:3px solid var(--wine);
+  box-shadow:0 10px 24px rgba(28,10,20,.16);
+  text-align:center;
+  transform:rotateY(var(--a)) translateZ(230px);
+  /* Cards on the far side of the ring are turned away from the viewer, so
+     their text renders mirrored — "Muga" reading backwards. Hiding the back
+     face means a card simply drops out of sight as it passes the halfway
+     point and returns when it comes round, which is what a physical carousel
+     does. Every label on screen is readable. */
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.ring3d__face b{display:block; font-size:13.5px; color:var(--wine-dark); line-height:1.25}
+.ring3d__face span{display:block; font-size:11px; color:var(--ink-3); margin-top:3px}
+.ring3d__face i{
+  display:inline-block; margin-top:5px; font-style:normal;
+  font-size:9.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  padding:2px 7px; border-radius:999px;
+  background:var(--wine-tint); color:var(--wine);
+}
+.ring3d__face--commercial{border-top-color:#1f8a70}
+.ring3d__face--commercial i{background:#e3f4ef; color:#146b56}
+.ring3d__face--seed{border-top-color:#c68e17}
+.ring3d__face--seed i{background:#fbf0d8; color:#8a6210}
+
+/* Hub */
+.ring3d__hub{
+  position:absolute; top:50%; left:50%; width:118px; height:118px;
+  margin:-59px 0 0 -59px; border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, var(--wine), var(--wine-dark));
+  color:#fff; display:grid; place-items:center; text-align:center;
+  box-shadow:0 14px 30px rgba(122,20,66,.42), inset 0 -8px 18px rgba(0,0,0,.28);
+  transform:translateZ(0);
+}
+.ring3d__hub b{display:block; font-size:22px; line-height:1}
+.ring3d__hub span{display:block; font-size:9.5px; opacity:.85; letter-spacing:.07em; text-transform:uppercase; margin-top:3px}
+
+
+/* -------------------------------------------------------------- 3 cycle3d
+
+   Life-cycle stages around a tilted orbit, each numbered node standing off
+   the ring on the Z axis. */
+
+.cycle3d-stage{perspective:1100px; height:300px; display:grid; place-items:center; margin:1.5rem 0 2rem}
+.cycle3d{
+  position:relative; width:180px; height:180px;
+  transform-style:preserve-3d;
+  transform:rotateX(66deg) rotateZ(var(--spin,0deg));
+  animation:cycle3dSpin 34s linear infinite;
+}
+.cycle3d-stage:hover .cycle3d{animation-play-state:paused}
+@keyframes cycle3dSpin{to{transform:rotateX(66deg) rotateZ(360deg)}}
+
+.cycle3d__ring{
+  position:absolute; inset:0; border-radius:50%;
+  border:2px dashed var(--line-wine);
+}
+.cycle3d__node{
+  position:absolute; top:50%; left:50%; width:104px; margin:-30px 0 0 -52px;
+  transform:rotate(var(--a)) translateX(150px) rotate(calc(-1 * var(--a))) rotateX(-66deg);
+  transform-style:preserve-3d;
+}
+.cycle3d__card{
+  padding:8px 10px; border-radius:8px; text-align:center;
+  background:var(--surface); border:1px solid var(--line-wine);
+  box-shadow:0 8px 20px rgba(28,10,20,.16);
+  transform:translateZ(26px);
+}
+.cycle3d__card b{display:block; font-size:12.5px; color:var(--wine-dark)}
+.cycle3d__card span{display:block; font-size:10.5px; color:var(--ink-3); margin-top:2px}
+.cycle3d__n{
+  position:absolute; top:-9px; left:50%; margin-left:-11px;
+  width:22px; height:22px; border-radius:50%;
+  background:var(--wine); color:#fff;
+  font:700 11px/22px inherit; text-align:center;
+  transform:translateZ(34px);
+  box-shadow:0 4px 10px rgba(122,20,66,.4);
+}
+
+
+/* -------------------------------------------------------------- 4 prism3d
+
+   Fibre cross-sections as extruded solids. Muga and tasar are elongated and
+   wedge-shaped with a larger surface area, which is why they give a deep glow
+   rather than mulberry's sharp sheen — a shape difference that a flat diagram
+   cannot show and a rotating solid can. */
+
+.prism3d-grid{
+  display:grid; gap:var(--gap);
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  margin:1.5rem 0;
+}
+.prism3d-cell{
+  perspective:800px; text-align:center;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:20px 14px 16px;
+}
+.prism3d{
+  position:relative;              /* containing block for the four faces */
+  width:74px; height:74px; margin:0 auto 14px;
+  transform-style:preserve-3d;
+  transform:rotateX(-22deg) rotateY(var(--spin,0deg));
+  animation:prismSpin 16s linear infinite;
+}
+.prism3d-cell:hover .prism3d{animation-play-state:paused}
+@keyframes prismSpin{to{transform:rotateX(-22deg) rotateY(360deg)}}
+
+.prism3d__f{
+  position:absolute; inset:0;
+  background:linear-gradient(150deg, var(--wine), var(--wine-dark));
+  border:1px solid rgba(255,255,255,.22);
+  opacity:.92;
+}
+/* Four faces swung around the Y axis to build a closed solid. */
+.prism3d__f:nth-child(1){transform:translateZ(24px)}
+.prism3d__f:nth-child(2){transform:rotateY(90deg) translateZ(24px)}
+.prism3d__f:nth-child(3){transform:rotateY(180deg) translateZ(24px)}
+.prism3d__f:nth-child(4){transform:rotateY(-90deg) translateZ(24px)}
+
+/* Section-specific silhouettes, clipped from the same solid. */
+.prism3d--triangle .prism3d__f{clip-path:polygon(50% 4%, 96% 94%, 4% 94%)}
+.prism3d--wedge    .prism3d__f{clip-path:polygon(16% 8%, 92% 26%, 84% 92%, 8% 74%)}
+.prism3d--oval     .prism3d__f{clip-path:ellipse(38% 48% at 50% 50%)}
+.prism3d--rect     .prism3d__f{clip-path:polygon(12% 22%, 88% 14%, 88% 86%, 12% 78%)}
+
+.prism3d-cell b{display:block; font-size:14px; color:var(--wine-dark)}
+.prism3d-cell span{display:block; font-size:11.5px; color:var(--ink-3); margin-top:3px; line-height:1.5}
+
+
+/* --------------------------------------------------------------- 5 flow3d
+
+   An isometric chain of steps. Each plate is skewed into the same projection,
+   so the sequence reads as objects on a bench rather than boxes on a page. */
+
+.flow3d{
+  display:flex; flex-wrap:wrap; gap:22px;
+  padding:26px 8px; margin:1.5rem 0;
+  perspective:1400px;
+}
+.flow3d__step{
+  position:relative;              /* containing block for the step number */
+  flex:1 1 150px; min-width:150px;
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-radius:10px; padding:16px 14px;
+  transform:rotateX(46deg) rotateZ(-38deg) translateZ(0);
+  transform-style:preserve-3d;
+  box-shadow:-14px 16px 26px rgba(28,10,20,.16);
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+}
+.flow3d__step:hover{
+  transform:rotateX(0deg) rotateZ(0deg) translateZ(30px);
+  box-shadow:0 20px 40px rgba(122,20,66,.24);
+  z-index:2;
+}
+.flow3d__step b{
+  display:block; font-size:13.5px; color:var(--wine-dark);
+  transform:translateZ(16px);
+}
+.flow3d__step span{
+  display:block; font-size:11.5px; color:var(--ink-3); margin-top:5px; line-height:1.55;
+  transform:translateZ(10px);
+}
+.flow3d__step i{
+  position:absolute; top:-11px; left:-11px;
+  width:26px; height:26px; border-radius:50%;
+  background:var(--wine); color:#fff;
+  font:700 12px/26px inherit; font-style:normal; text-align:center;
+  transform:translateZ(24px);
+  box-shadow:0 6px 14px rgba(122,20,66,.4);
+}
+
+
+/* -------------------------------------------------------------- 6 stack3d
+
+   Layered panels with real Z separation — used where a hierarchy is better
+   felt than labelled. */
+
+.stack3d{perspective:1000px; margin:1.5rem 0}
+.stack3d__l{
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-left:4px solid var(--wine); border-radius:9px;
+  padding:14px 18px; margin:0 0 -8px;
+  transform:rotateX(34deg) translateZ(calc(var(--z,0) * 26px));
+  transform-style:preserve-3d;
+  box-shadow:0 12px 26px rgba(28,10,20,.14);
+  transition:transform .4s cubic-bezier(.2,.8,.2,1);
+}
+.stack3d:hover .stack3d__l{transform:rotateX(0deg) translateZ(0); margin-bottom:10px}
+.stack3d__l b{display:block; font-size:14px; color:var(--wine-dark)}
+.stack3d__l span{display:block; font-size:12px; color:var(--ink-3); margin-top:3px}
+
+
+/* -------------------------------------------------------------- 7 tower3d
+
+   Solid columns standing on a floor, height proportional to value.
+
+   Used for prices, where the story is pure magnitude: muga trades at roughly
+   ten times every other silk. A pie cannot show that, a bar chart flattens it,
+   and a log axis — while honest — hides the very gap it is compressing. A
+   column you have to look *up* at states the case immediately. */
+
+.tower3d-stage{position:relative; padding:16px 10px 10px; margin:1.4rem 0}
+.tower3d-floor{
+  display:flex; align-items:flex-end; justify-content:center;
+  gap:clamp(18px, 5vw, 54px);
+}
+
+/* Each column is a flex column: figure, then the solid, then the name. Text
+   sits in normal flow rather than being positioned over the geometry, which
+   is what was letting labels land on top of the columns and each other. */
+.tower3d-col{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  flex:0 1 auto; min-width:0;
+}
+.tower3d-val{
+  font-size:13px; font-weight:700; color:var(--wine-dark);
+  white-space:nowrap; font-variant-numeric:tabular-nums;
+}
+.tower3d-name{
+  font-size:12px; color:var(--ink-2); text-align:center;
+  max-width:96px; line-height:1.3;
+}
+.tower3d-stage:hover .tower3d,
+.tower3d-stage:focus-within .tower3d{animation-play-state:paused}
+
+/* Ground line, so the columns read as standing on something. */
+.tower3d-floor::after{
+  content:""; position:absolute; left:6%; right:6%; bottom:34px; height:2px;
+  background:linear-gradient(90deg, transparent, var(--line-wine), transparent);
+  z-index:-1;
+}
+
+/* Built from three flat faces skewed into an isometric projection, rather
+   than a five-sided box in real 3D space. Nested preserve-3d boxes render
+   differently across browsers and collapse unpredictably when an ancestor
+   picks up a transform; two skews and a rectangle are the same shape and
+   cannot break. */
+.tower3d{
+  position:relative; width:48px; height:var(--h,80px);
+  margin-right:14px;                       /* room for the right face */
+  transition:height .6s cubic-bezier(.2,.8,.2,1);
+  animation:towerBob 4.5s ease-in-out infinite alternate;
+  animation-delay:var(--d,0s);
+}
+@keyframes towerBob{from{transform:translateY(0)} to{transform:translateY(-7px)}}
+
+/* Same reasoning as .slab3d: these faces are <span> elements. position:absolute
+   blockifies them so they would size correctly anyway, but stating it keeps
+   the rule true if the markup is ever changed to static positioning. */
+.tower3d__f{display:block; position:absolute; border:1px solid rgba(255,255,255,.14)}
+
+/* Front */
+.tower3d__f--fr{
+  left:0; top:0; width:48px; height:100%;
+  background:linear-gradient(180deg, var(--wine), var(--wine-dark));
+}
+/* Top — parallelogram leaning up and to the right */
+.tower3d__f--tp{
+  left:0; top:-14px; width:48px; height:14px;
+  background:linear-gradient(135deg, #d4487f, #c2185b);
+  transform:skewX(45deg); transform-origin:0 100%;
+}
+/* Right — parallelogram receding up and to the right */
+.tower3d__f--rt{
+  left:48px; top:0; width:14px; height:100%;
+  background:linear-gradient(180deg, #8e1240, #450c24);
+  transform:skewY(-45deg); transform-origin:0 0;
+}
+/* The back and left faces are never visible in this projection. */
+.tower3d__f--bk,.tower3d__f--lf{display:none}
+
+.tower3d--2 .tower3d__f--fr{background:linear-gradient(180deg,#c2185b,#8e1240)}
+.tower3d--2 .tower3d__f--tp{background:linear-gradient(135deg,#e07aa5,#d4487f)}
+.tower3d--3 .tower3d__f--fr{background:linear-gradient(180deg,#d46a9a,#a8306d)}
+.tower3d--3 .tower3d__f--tp{background:linear-gradient(135deg,#eda6c2,#d46a9a)}
+.tower3d--4 .tower3d__f--fr{background:linear-gradient(180deg,#8c6f7d,#5c4954)}
+.tower3d--4 .tower3d__f--tp{background:linear-gradient(135deg,#b299a5,#8c6f7d)}
+/* Second and later towers step through the palette so they read apart. */
+.tower3d--2 .tower3d__f{background:linear-gradient(180deg,#c2185b,#8e1240)}
+.tower3d--3 .tower3d__f{background:linear-gradient(180deg,#d46a9a,#a8306d)}
+.tower3d--4 .tower3d__f{background:linear-gradient(180deg,#8c6f7d,#5c4954)}
+
+/* .tower3d__cap is retired — the figure and name are now flow siblings of the
+   column (.tower3d-val / .tower3d-name) instead of absolute boxes floating
+   over it. Kept as a no-op so any older markup degrades quietly. */
+.tower3d__cap{display:none}
+
+
+/* -------------------------------------------------------------- 8 steps3d
+
+   An ascending staircase. Used for the five-year target series, because a
+   target is a climb — each tread is a year, and the rise between treads is
+   the increment that has to be found. Reading it as steps makes the size of
+   each year's ask obvious in a way a line does not. */
+
+.steps3d-stage{
+  padding:24px 4px; margin:1.4rem 0;
+  display:grid; place-items:center; overflow-x:auto;
+}
+.steps3d{
+  display:flex; align-items:flex-end; gap:0; min-width:min-content;
+  padding-right:22px;                      /* room for the last right face */
+}
+
+/* Each step is a flex column so its caption sits under it in normal flow.
+   Absolute captions above the treads were colliding with the step in front
+   and running off the right edge on the last one. */
+.steps3d__col{
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  flex:0 0 auto;
+}
+.steps3d__cap{
+  margin-top:10px; text-align:center; width:96px;
+}
+.steps3d__cap b{
+  display:block; font-size:12.5px; color:var(--wine-dark); line-height:1.15;
+  font-variant-numeric:tabular-nums;
+}
+.steps3d__cap span{display:block; font-size:9.5px; color:var(--ink-3); margin-top:2px; line-height:1.3}
+
+/* Same isometric projection as the columns: a front face, a tread leaning
+   up-right, and a receding side. Each step is taller than the last, so the
+   row reads as a staircase without any real 3D rotation. */
+.steps3d__t{
+  position:relative; flex:0 0 92px; height:var(--h,60px);
+  animation:stepRise .7s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay:var(--d,0s);
+}
+@keyframes stepRise{
+  from{opacity:0; transform:translateY(26px)}
+  to  {opacity:1; transform:none}
+}
+
+.steps3d__riser{
+  position:absolute; left:0; top:0; width:92px; height:100%;
+  background:linear-gradient(180deg, var(--wine), var(--wine-dark));
+  border:1px solid rgba(255,255,255,.14);
+}
+.steps3d__t::after{                        /* receding right side */
+  content:""; position:absolute; left:92px; top:0; width:20px; height:100%;
+  background:linear-gradient(180deg,#8e1240,#450c24);
+  transform:skewY(-45deg); transform-origin:0 0;
+}
+.steps3d__top{                             /* the tread */
+  position:absolute; left:0; top:-20px; width:92px; height:20px;
+  background:linear-gradient(135deg,#d4487f,#c2185b);
+  border:1px solid rgba(255,255,255,.2);
+  transform:skewX(45deg); transform-origin:0 100%;
+}
+/* Retired: the caption is now a flow sibling below the step. */
+.steps3d__lab{display:none}
+
+
+/* ------------------------------------------------------------- 9 strata3d
+
+   Planes receding into depth, one per year, newest nearest. Used for the
+   six-year production trend: the eye reads "layer upon layer" as accumulation
+   over time, which is exactly what the series is. Hovering fans them apart. */
+
+.strata3d-stage{
+  perspective:1400px; perspective-origin:50% 30%;
+  display:grid; place-items:center;
+  padding:10px 0 20px; margin:1.4rem 0; cursor:grab;
+}
+.strata3d{
+  position:relative; width:min(430px, 92%); height:340px;
+  transform-style:preserve-3d;
+  animation:strataSway 20s ease-in-out infinite alternate;
+}
+.strata3d-stage:hover .strata3d,
+.strata3d-stage:focus-within .strata3d{animation-play-state:paused}
+
+/* A shallow tilt. The earlier 48–58 degrees foreshortened six 42px layers
+   into roughly 20px each and squashed the whole stack into an unreadable
+   sliver — the text was still there, just compressed to nothing. Around 26
+   degrees keeps the layered look while leaving the figures legible. */
+@keyframes strataSway{
+  from{transform:rotateX(28deg) rotateZ(-7deg)}
+  to  {transform:rotateX(20deg) rotateZ(3deg)}
+}
+
+.strata3d__l{
+  position:absolute; left:0; right:0; height:46px;
+  top:calc(var(--i) * 52px);
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-left:5px solid var(--wine); border-radius:6px;
+  padding:0 16px;
+  box-shadow:0 8px 18px rgba(28,10,20,.14);
+  transform:translateZ(calc(var(--i) * 16px));
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.strata3d-stage:hover .strata3d__l{
+  transform:translateZ(calc(var(--i) * 30px));
+  box-shadow:0 16px 30px rgba(122,20,66,.22);
+}
+/* The newest year is nearest and reads as the current figure. */
+.strata3d__l:last-child{border-left-color:#c2185b; border-left-width:7px}
+.strata3d__l b{font-size:12.5px; color:var(--wine-dark)}
+.strata3d__l span{font-size:12px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+.strata3d__bar{
+  position:absolute; left:0; bottom:0; height:3px; border-radius:0 3px 3px 0;
+  background:var(--wine); width:var(--w,50%);
+}
+
+
+/* -------------------------------------------------------------- 10 slab3d
+
+   Horizontal isometric bars lying flat, length proportional to value. Used
+   for the price comparison, where the vertical columns elsewhere would only
+   repeat themselves — a bar you read left to right invites comparison of
+   *ratio*, which is the question here: how many times one silk is worth
+   another. Same skew projection as the columns, turned on its side. */
+
+/* A three-column grid: name, track, figure. The bar lives inside the track
+   and is sized as a percentage of it, so however long it grows it cannot
+   push the figure off the page — which is exactly what the earlier
+   absolutely-positioned version did. */
+.slab3d-list{
+  list-style:none; margin:1.4rem 0; padding:14px 0;
+  display:grid; gap:20px 14px;
+  grid-template-columns:minmax(96px, 132px) 1fr minmax(84px, auto);
+  align-items:center;
+}
+.slab3d-row{display:contents}
+
+.slab3d-name{
+  font-size:13px; font-weight:700; color:var(--wine-dark); line-height:1.3;
+}
+.slab3d-track{display:block; position:relative; min-width:0; padding-right:16px}
+
+/* display:block is load-bearing, not tidiness. These are <span> elements, and
+   an inline box ignores width and height outright — the bar collapsed to
+   nothing and its faces, sized with inset:0, had no area to fill. The name
+   and figure cells escaped this because grid items are blockified
+   automatically; the bar sits inside a cell, so it never was one. */
+.slab3d{
+  display:block;
+  position:relative; height:28px; width:var(--w,50%); min-width:34px;
+  animation:slabGrow .8s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay:var(--d,0s);
+  transform-origin:0 50%;
+}
+.slab3d__face,.slab3d__top,.slab3d__end{display:block}
+@keyframes slabGrow{from{transform:scaleX(.02); opacity:0} to{transform:scaleX(1); opacity:1}}
+
+.slab3d-val{
+  font-size:13px; font-weight:700; color:var(--wine-dark);
+  white-space:nowrap; font-variant-numeric:tabular-nums;
+}
+.slab3d-val small{
+  display:block; font-weight:400; color:var(--ink-3); font-size:11px; margin-top:1px;
+}
+
+.slab3d__face{                     /* front */
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, var(--wine), var(--wine-dark));
+  border:1px solid rgba(255,255,255,.14);
+}
+.slab3d__top{                      /* upper surface, leaning up-right */
+  position:absolute; left:0; top:-12px; width:100%; height:12px;
+  background:linear-gradient(135deg,#d4487f,#c2185b);
+  transform:skewX(45deg); transform-origin:0 100%;
+}
+.slab3d__end{                      /* the far end, receding */
+  position:absolute; left:100%; top:0; width:12px; height:100%;
+  background:linear-gradient(180deg,#8e1240,#450c24);
+  transform:skewY(-45deg); transform-origin:0 0;
+}
+/* Retired: name and figure are now grid cells, not boxes over the bar. */
+.slab3d__lab,.slab3d__val{display:none}
+
+.slab3d--2 .slab3d__face{background:linear-gradient(180deg,#c2185b,#8e1240)}
+.slab3d--2 .slab3d__top{background:linear-gradient(135deg,#e07aa5,#d4487f)}
+.slab3d--3 .slab3d__face{background:linear-gradient(180deg,#d46a9a,#a8306d)}
+.slab3d--3 .slab3d__top{background:linear-gradient(135deg,#eda6c2,#d46a9a)}
+.slab3d--4 .slab3d__face{background:linear-gradient(180deg,#8c6f7d,#5c4954)}
+.slab3d--4 .slab3d__top{background:linear-gradient(135deg,#b299a5,#8c6f7d)}
+
+
+/* ------------------------------------------------------------- 11 threads
+
+   Silk drawn as silk.
+
+   The previous attempt here was a line chart tilted back into perspective.
+   It read badly: tipping a graph away from the reader distorts the very axes
+   they are trying to judge, and the tilt bought nothing the flat version
+   didn't already say. This replaces it with the obvious idea — the product
+   is thread, so the data is thread.
+
+   Each silk is a filament flowing across a dark ground. Thickness carries
+   production, a glint travels the length of each strand the way light runs
+   along real silk, and the whole weave drifts. No axes to distort, and the
+   thing being measured and the thing being drawn are the same object. */
+
+.threads{
+  position:relative; border-radius:14px; overflow:hidden;
+  background:
+    radial-gradient(90% 130% at 12% 0%, #7d1745 0%, transparent 58%),
+    linear-gradient(135deg, #59102f 0%, #3d0a20 55%, #2a0616 100%);
+  box-shadow:0 22px 46px rgba(28,10,20,.34), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+/* A slow sheen across the whole panel, like light moving over cloth. */
+.threads::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.05) 50%, transparent 62%);
+  background-size:260% 100%;
+  animation:threadSheen 9s ease-in-out infinite;
+}
+@keyframes threadSheen{
+  0%,100%{background-position:120% 0}
+  50%    {background-position:-40% 0}
+}
+
+.threads__svg{display:block; width:100%; height:auto}
+
+/* Each strand lives in a group that slides left by exactly one wavelength and
+   repeats — the path is drawn several wavelengths wide, so the loop is
+   seamless and the thread appears to run without end. */
+.threads__flow{animation:threadFlow var(--speed,15s) linear infinite}
+@keyframes threadFlow{to{transform:translateX(-300px)}}
+.threads:hover .threads__flow{animation-play-state:paused}
+
+.threads__strand{
+  fill:none; stroke-linecap:round;
+  opacity:.92;
+}
+
+/* The glint: a short dash of light chasing along the strand. */
+.threads__glint{
+  fill:none; stroke:#fff; stroke-linecap:round; opacity:.5;
+  stroke-dasharray:70 2000;
+  animation:threadGlint var(--glint,7s) linear infinite;
+  animation-delay:var(--gd,0s);
+}
+@keyframes threadGlint{from{stroke-dashoffset:2070} to{stroke-dashoffset:0}}
+
+/* Labels ride on the panel, clear of the weave. */
+.threads__name{
+  fill:#fff; font-size:15px; font-weight:700;
+  letter-spacing:.01em;
+}
+.threads__val{
+  fill:#f6d9e6; font-size:13px; font-variant-numeric:tabular-nums;
+}
+.threads__delta{font-size:11.5px; font-weight:700}
+.threads__delta--up{fill:#8fe0b0}
+.threads__delta--down{fill:#f2a0b8}
+
+@media (prefers-reduced-motion:reduce){
+  .threads::after,.threads__flow,.threads__glint{animation:none}
+}
+
+
+/* --------------------------------------------------------------- captions */
+
+.d3-caption{
+  max-width:70ch; font-size:13px; color:var(--ink-3);
+  line-height:1.65; margin:.4rem 0 0;
+}
+
+
+/* ------------------------------------------------------- reduced motion
+   Rotation stops, but the objects keep their depth — someone who has asked
+   for less movement should still get the diagram, not a blank space. */
+
+@media (prefers-reduced-motion:reduce){
+  .ring3d,.cycle3d,.prism3d{animation:none}
+  .tilt3d,.flow3d__step,.stack3d__l{transition:none}
+  .tilt3d{transform:none}
+}
+
+/* --------------------------------------------------------------- narrow
+   Below 620px the wheels are cramped and the isometric plates unreadable, so
+   they flatten into ordinary lists rather than being shrunk into illegibility. */
+
+@media (max-width:620px){
+  /* The columns, staircase and strata all rely on width and viewing angle.
+     Squeezed onto a phone they become unreadable, so each flattens into an
+     ordinary labelled list rather than being shrunk into illegibility. */
+  /* Columns become a labelled list: the solid keeps its front face as a
+     coloured bar, the figure and name sit beside it. */
+  .tower3d-stage{padding:0}
+  .tower3d-floor{display:block}
+  .tower3d-floor::after{display:none}
+  .tower3d-col{
+    flex-direction:row; align-items:center; gap:12px;
+    margin:0 0 12px; justify-content:flex-start;
+  }
+  .tower3d{
+    width:64px; height:26px !important; margin:0; animation:none; order:2;
+  }
+  .tower3d__f--tp,.tower3d__f--rt{display:none}
+  .tower3d__f--fr{border-radius:4px}
+  .tower3d-val{order:3; font-size:12.5px}
+  .tower3d-name{order:1; max-width:none; text-align:left; flex:0 0 116px; font-size:12.5px}
+
+  .steps3d-stage{padding:0; overflow-x:visible}
+  .steps3d{display:block; padding-right:0}
+  .steps3d__col{display:block; margin:0 0 10px}
+  .steps3d__t{height:26px !important; width:100%; animation:none}
+  .steps3d__t::after{display:none}
+  .steps3d__riser{width:100%; border-radius:4px}
+  .steps3d__top{display:none}
+  .steps3d__cap{
+    width:auto; margin:4px 0 0; text-align:left;
+    display:flex; gap:10px; align-items:baseline;
+  }
+  .steps3d__cap span br{display:none}
+
+  .strata3d-stage{height:auto; perspective:none; display:block}
+  .strata3d{width:auto; height:auto; transform:none}
+  .strata3d__l{position:static; height:auto; transform:none !important; margin:0 0 8px}
+
+  .slab3d-list{padding-right:0; gap:34px}
+  .slab3d__val{left:0; top:calc(100% + 4px); transform:none}
+  .slab3d__val small{display:inline; margin-left:6px}
+
+  .ring3d-stage{height:auto; perspective:none; display:block}
+  .ring3d{width:auto; height:auto; transform:none; animation:none}
+  .ring3d__hub{display:none}
+  .ring3d__face{
+    position:static; width:auto; margin:0 0 10px; transform:none;
+    text-align:left;
+  }
+  .cycle3d-stage{height:auto; perspective:none; display:block}
+  .cycle3d{width:auto; height:auto; transform:none; animation:none}
+  .cycle3d__ring{display:none}
+  .cycle3d__node{position:static; width:auto; margin:0 0 10px; transform:none}
+  .cycle3d__card{transform:none}
+  .cycle3d__n{position:static; display:inline-block; margin:0 8px 0 0; transform:none}
+  .flow3d{perspective:none; gap:12px}
+  .flow3d__step{transform:none; box-shadow:0 4px 12px rgba(28,10,20,.1)}
+  .flow3d__step b,.flow3d__step span,.flow3d__step i{transform:none}
+  .flow3d__step i{position:static; display:inline-block; margin:0 0 8px}
+  .stack3d__l{transform:none; margin:0 0 10px}
+}

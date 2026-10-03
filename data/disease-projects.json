@@ -1,0 +1,522 @@
+{
+  "source": "cmerti-site/data/annual-report-extract.json (Annual Reports 2014-15 to 2024-25), filtered for disease, pest, forewarning and disinfection work",
+  "projects": [
+    {
+      "title": "Characterization, transmission and cyto-pathology of infectious flacherie and cytoplasmic polyhedrosis virus in muga silkworm Antheraea assamensis Helfer",
+      "reported": [
+        {
+          "year": "2014-15",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2015-16",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2017-18",
+          "status": "completed",
+          "division": "Pathology"
+        }
+      ]
+    },
+    {
+      "title": "Etiology of bacterial diseases and molecular characterization of the pathogens of muga silkworm in NE India",
+      "reported": [
+        {
+          "year": "2014-15",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2015-16",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2016-17",
+          "status": "completed",
+          "division": "Silkworm Pathology"
+        }
+      ]
+    },
+    {
+      "title": "Forecasting and forwarning for pest and disease of muga host plants and silkworm",
+      "reported": [
+        {
+          "year": "2014-15",
+          "status": "ongoing",
+          "division": "PMCE / Pathology"
+        },
+        {
+          "year": "2017-18",
+          "status": "ongoing",
+          "division": "Pathology / Entomology"
+        }
+      ]
+    },
+    {
+      "title": "Propagation and multiplication of foliar disease tolerant S3 and S6 morphotypes of som food plant of muga silkworm rearing in Lower Assam",
+      "reported": [
+        {
+          "year": "2014-15",
+          "status": "ongoing",
+          "division": "Host Plant"
+        }
+      ]
+    },
+    {
+      "title": "Development of Decision Support System for Early Warning of Selected Muga Silkworm Diseases & Pests with Geospatial Technique",
+      "reported": [
+        {
+          "year": "2015-16",
+          "status": "ongoing",
+          "division": "Entomology / Pathology"
+        },
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "Extension & Training / PMCE"
+        },
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology / Entomology"
+        },
+        {
+          "year": "2019-20",
+          "status": "completed",
+          "division": "Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Forecasting and forewarning for pest and disease of muga host plants and silkworm",
+      "reported": [
+        {
+          "year": "2015-16",
+          "status": "ongoing",
+          "division": "Entomology / Pathology"
+        },
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "PMCE"
+        }
+      ]
+    },
+    {
+      "title": "Next generation sequencing studies and bioinformatics analysis of microbiome of flacherie infected Antheraea assamensis Helfer for developing effective disease control measures",
+      "reported": [
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "Biotechnology / Silkworm Pathology"
+        },
+        {
+          "year": "2017-18",
+          "status": "ongoing",
+          "division": "Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Isolation and characterization of lytic bacteriophages infecting bacterial pathogens of muga silkworm, Antheraea assamensis Helfer",
+      "reported": [
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "Silkworm Pathology"
+        },
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology"
+        },
+        {
+          "year": "2019-20",
+          "status": "ongoing",
+          "division": "Biotechnology"
+        },
+        {
+          "year": "2020-21",
+          "status": "completed",
+          "division": "Silkworm / Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Biological control of uziflies",
+      "reported": [
+        {
+          "year": "2016-17",
+          "status": "ongoing",
+          "division": "Entomology"
+        }
+      ]
+    },
+    {
+      "title": "Development of decision support system for early warning of muga silkworm diseases and pests with geospatial techniques",
+      "reported": [
+        {
+          "year": "2017-18",
+          "status": "ongoing",
+          "division": "Pathology / Entomology"
+        }
+      ]
+    },
+    {
+      "title": "Isolation and characterization of lytic bacterio-phages against bacterial pathogens of muga silkworm, Antheraea assamensis Helfer",
+      "reported": [
+        {
+          "year": "2017-18",
+          "status": "ongoing",
+          "division": "Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Studies on the cross transmission of pebrine spores from lepidopteran caterpillars to muga silkworm (Antheraea assamensis, Helfer) and its control measures",
+      "reported": [
+        {
+          "year": "2017-18",
+          "status": "ongoing",
+          "division": "Pathology"
+        },
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology"
+        },
+        {
+          "year": "2019-20",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2020-21",
+          "status": "completed",
+          "division": "Silkworm"
+        }
+      ]
+    },
+    {
+      "title": "Development of a technology for controlling bacterial flacherie disease in Muga silkworm",
+      "reported": [
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology"
+        },
+        {
+          "year": "2019-20",
+          "status": "completed",
+          "division": "Silkworm"
+        }
+      ]
+    },
+    {
+      "title": "Development of a diagnostic tool for early detection of baculovirus causing Tiger band disease in Antheraea proylei",
+      "reported": [
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology"
+        },
+        {
+          "year": "2019-20",
+          "status": "ongoing",
+          "division": "RSRS Imphal"
+        },
+        {
+          "year": "2020-21",
+          "status": "completed",
+          "division": "RSRS Imphal / Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Popularization and utilization of Foldscope for detection of pebrine disease (Nosema assama) in muga silkworm seed production areas",
+      "reported": [
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology / Extension"
+        },
+        {
+          "year": "2019-20",
+          "status": "completed",
+          "division": "Biotechnology"
+        }
+      ]
+    },
+    {
+      "title": "Forecasting and forewarning for pest and diseases of muga host plants and silkworms (Regular Programme)",
+      "reported": [
+        {
+          "year": "2018-19",
+          "status": "ongoing",
+          "division": "Pathology / Extension"
+        }
+      ]
+    },
+    {
+      "title": "Breeding of muga-silkworms for improved silk quality and disease tolerance",
+      "reported": [
+        {
+          "year": "2019-20",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2020-21",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2021-22",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2022-23",
+          "status": "completed",
+          "division": "Silkworm"
+        }
+      ]
+    },
+    {
+      "title": "Development of chemical based control measures for management of pebrine disease in Muga silkworm, Antheraea assamensis Helfer",
+      "reported": [
+        {
+          "year": "2020-21",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2021-22",
+          "status": "ongoing",
+          "division": "Silkworm"
+        },
+        {
+          "year": "2022-23",
+          "status": "ongoing",
+          "division": "Silkworm (Pathology)"
+        }
+      ]
+    },
+    {
+      "title": "Muga and Eri silkworm disease monitoring in north eastern states of India",
+      "reported": [
+        {
+          "year": "2022-23",
+          "status": "ongoing",
+          "division": "Silkworm (Pathology)"
+        },
+        {
+          "year": "2023-24",
+          "status": "ongoing",
+          "division": "Capacity Building & Training / Pathology"
+        }
+      ]
+    },
+    {
+      "title": "Development of chemical-based control measures for the management of pebrine disease in Muga silkworm, Antheraea asamensis Helfer",
+      "reported": [
+        {
+          "year": "2023-24",
+          "status": "completed",
+          "division": "Silkworm / Pathology"
+        }
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "title": "Antibacterial activity of host plant volatiles against the bacterial pathogen of muga silkworm, Antheraea assamensis Helfer",
+      "authors": "Borgohain, A., Das, K. and Chutia, M.",
+      "year": "2014",
+      "type": "conference paper"
+    },
+    {
+      "title": "Efficacy of sodium hypochlorite in controlling viral and bacterial diseases in muga silkworm, Antheraea assamensis Helfer",
+      "authors": "Ibotombi Singh N, Goswami D, Ahmed M, Giridhar K",
+      "year": "2014",
+      "type": "paper"
+    },
+    {
+      "title": "Emerging disease and pest scenario in muga silkworm, Antheraea assamensis under the impact of climate change",
+      "authors": "Das, R., Gogoi, A.K., Chutia M. and Das K.",
+      "year": "2014",
+      "type": "conference paper"
+    },
+    {
+      "title": "Effect of abiotic factors on infestation of uzifly in different instar muga silkworm, Antheraea assamensis",
+      "authors": "Das R, Das K",
+      "year": "2016",
+      "type": "paper"
+    },
+    {
+      "title": "Effect of submerged culture parameters on growth and antimicrobial activity of Paenibacillus lautus RRTAY-2, against some pathogens of Antheraea assamensis Helfer",
+      "authors": "DK Gogoi, SP Sandilya, PM Bhuyan, P Dutta, K Neog, LSK Singh, TC Bora",
+      "year": "2016",
+      "type": "paper"
+    },
+    {
+      "title": "Aeromonas caviae CSB04, a causal organism of bacterial flacherie in Muga silkworm (Antheraea assamensis Helfer)",
+      "authors": "SP Sandilya, P Dutta, PM Bhuyan, R Debnath, A Changmai, K Neog, DK Gogoi",
+      "year": "2017",
+      "type": "paper"
+    },
+    {
+      "title": "Standardization of mother moth examination for pebrine detection in samia species for diagnosis of pebrine disease in commercial seed production",
+      "authors": "MD Senapati, AK Hazarika",
+      "year": "2017",
+      "type": "technical note"
+    },
+    {
+      "title": "Effect of fungal and bacterial diseases in different instar muga silkworm, Antheraea assamensis Helfer in different crop seasons",
+      "authors": "Das, R. and Das, K.",
+      "year": "2017",
+      "type": "paper"
+    },
+    {
+      "title": "Efficiency of disinfectants for controlling bacterial flacherie in muga silkworm, Antheraea assamensis Helfer",
+      "authors": "G. Subrahmanyam, B. Jeevan, M. Kalita, M. Chutia and R. Das",
+      "year": "2018",
+      "type": "conference paper"
+    },
+    {
+      "title": "High throughput sequencing analysis of midgut bacterial pathobiome associated with flacherie disease in Muga silkworm Antheraea assamensis Helfer",
+      "authors": "G. Subrahmanyam, M. Kalita, R. Debnath, B. Jeevan, M. Chutia, R. Das, D. Goswami",
+      "year": "2018",
+      "type": "conference paper"
+    },
+    {
+      "title": "Mycosynthesis of Silver Nanoparticle with multiple effect for management of pathogens, enhancing host physiology and increasing quality of Muga Silk",
+      "authors": "Pranab Dutta, P.K. Kaman, A.A. Ahmed, H. Kaushik, Ankita Das, S. Kumari, B. Mahanta and K. Neog",
+      "year": "2018",
+      "type": "conference paper"
+    },
+    {
+      "title": "Exploitation of antagonist against Pestalotiopsis disseminata causing grey blight disease of som (Persea bombycina Kost)",
+      "authors": "Ranjana Das, K. Das, Jeevan B and D.K. Jha",
+      "year": "2018",
+      "type": "conference paper"
+    },
+    {
+      "title": "Suitable molecular methods in the rapid diagnosis of microbial pathogens of Muga silkworm",
+      "authors": "Subrahmanyam G, Chutia M, Das R",
+      "year": "2019",
+      "type": "paper"
+    },
+    {
+      "title": "Advanced molecular methods in the diagnosis of microbial pathogens of Antheraea assamensis Helfer",
+      "authors": "Subrahmanyam G, Chutia M, Das R",
+      "year": "2019",
+      "type": "book chapter"
+    },
+    {
+      "title": "Muscardine Disease and Its Management Practices in Muga Culture",
+      "authors": "Subrahmanyam G, Sangannavar P, Saikia M, Das R",
+      "year": "2018",
+      "type": "manual"
+    },
+    {
+      "title": "Nesolynx thymus (Hymenoptera: Eulophide) - A promising pupal endo-parasitoid to control uzifly infesting muga silkworm",
+      "authors": "Roy D, Singh Subadas",
+      "year": "2020",
+      "type": "paper"
+    },
+    {
+      "title": "Isolation and Molecular Identification of Microsporidian Pathogen Causing Nosemosis in Muga Silkworm, Antheraea assamensis Helfer",
+      "authors": "Subrahmanyam G, Esvaran VG, Ponnuvel KM, Hassan W, Chutia M, Das R",
+      "year": "2019",
+      "type": "paper"
+    },
+    {
+      "title": "Sodium hypochlorite disinfection: An effective disinfection for silkworm eggs to protect against tiger band disease",
+      "authors": "Subharani S, Ponnuvel KM, Singh NI, Mishra RK",
+      "year": "2019",
+      "type": "manual"
+    },
+    {
+      "title": "Integrated Pest Management of uzi fly: A serious pest of oak tasar silkworm",
+      "authors": "Subharani S, Debaraj Y, Somen L, Priyadarshini O, Singh NI",
+      "year": "2020",
+      "type": "manual"
+    },
+    {
+      "title": "Management of tiger band disease in oak tasar culture",
+      "authors": "Subharani S, Debaraj Y, Somen L, Rojini A, Singh NI",
+      "year": "2020",
+      "type": "leaflet"
+    },
+    {
+      "title": "Sodium hypochlorite: A boon to protect oak tasar silkworms against tiger band disease",
+      "authors": "Subharani, S., Ponnuvel, K.M., Debaraj, Y, VijayaKumari, K.M.",
+      "year": "2022",
+      "type": "popular article"
+    },
+    {
+      "title": "Nesolynx thymus: a biocontrol agent to control uzifly in muga ecosystem",
+      "authors": "Subadas Singh, T. James Keisa, DK Jigyasu, Reeta Luikham, Jalaja S. Kumar",
+      "year": "2021",
+      "type": "popular article"
+    },
+    {
+      "title": "Package of practices for Uzi fly Management in Muga ecosystem",
+      "authors": "Subadas Singh, T. James Keisa, D.K. Jigyasu, Reeta Luikham, Vijayakumari K.M.",
+      "year": "2022",
+      "type": "manual"
+    },
+    {
+      "title": "Cross-transmission of a microsporidian pathogen from muga silkworm to eri silkworm",
+      "authors": "Borah L, Subrahmanyam G, Gogoi DJ, Shah S, Mahesh DS, Vijayakumari KM, Chikkaputtaiah C, Arunkumar KP",
+      "year": "2022",
+      "type": "paper"
+    },
+    {
+      "title": "Disinfection and hygiene maintenance in eri silkworm rearing",
+      "authors": "DS Mahesh, KP Arunkumar, Reeta Luikham, KM Vijaya Kumari",
+      "year": "2023",
+      "type": "technical note"
+    },
+    {
+      "title": "Molecular methods for diagnosis of microbial pathogens in muga silkworm, Antheraea assamensis Helfer",
+      "authors": "Subrahmanyam G, Ponnuvel KM, Arunkumar KP, Rahul K, Moorthy SM, Sivaprasad V",
+      "year": "2023",
+      "type": "paper"
+    },
+    {
+      "title": "CRISPR/Cas9 mediated mutation in XSP10 and SlSAMT genes impart genetic tolerance to Fusarium wilt disease of tomato",
+      "authors": "Debbarma J, Saikia B, Singha DL, Das D, Keot AK, Maharana J, Velmurugan N, Arunkumar KP, Palakolanu SR, Chikkaputtaiah C",
+      "year": "2023",
+      "type": "paper"
+    },
+    {
+      "title": "Cross-transmission of a microsporidian pathogen from muga silkworm, Antheraea assamensis Helfer to eri silkworm, Samia ricini",
+      "authors": "L. M. Borah, G. Subrahmanyam, D. J. Gogoi, S. Shah, D. S. Mahesh, K. M. Vijayakumari, C. Chikkaputtaiah, K. P. Arunkumar",
+      "year": "2023",
+      "type": "paper"
+    },
+    {
+      "title": "Diseases and its management in oak tasar culture (Bilingual)",
+      "authors": "Subharani S, Singh DL, Subadas Kh, Somen L, Debaraj Y",
+      "year": "2023",
+      "type": "leaflet"
+    },
+    {
+      "title": "Advancing Pebrine Identification in Muga Sericulture Through Artificial Intelligence",
+      "authors": "N Vijay et al.",
+      "year": "2024",
+      "type": "conference paper"
+    }
+  ]
+}

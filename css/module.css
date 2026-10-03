@@ -1,0 +1,53 @@
+/* Disease Monitoring module — the few rules the extracted pages did not
+   already have. Everything else comes from base.css (copied from cmerti-site). */
+
+body{margin:0; background:var(--bg); color:var(--ink)}
+
+.dm-top{background:var(--wine); color:#fff}
+.dm-top__row{display:flex; align-items:center; justify-content:space-between; gap:var(--gap); padding-block:14px}
+.dm-brand{color:#fff; text-decoration:none; display:flex; flex-direction:column; line-height:1.3}
+.dm-brand b{font-size:19px}
+.dm-brand span{font-size:13px; opacity:.85}
+.dm-back{color:#fff; font-size:14px; opacity:.9; white-space:nowrap}
+
+.dm-stages{background:var(--wine-dark); max-width:none; padding:0}
+.dm-stages ol{list-style:none; margin:0 auto; padding:0 var(--gap); max-width:var(--wrap);
+  display:flex; flex-wrap:wrap; gap:4px}
+.dm-stages a{display:block; padding:10px 14px; color:#fff; text-decoration:none; font-size:14.5px; opacity:.85}
+.dm-stages a:hover, .dm-stages .is-current a{opacity:1; background:rgba(255,255,255,.12)}
+.dm-stages i{font-style:normal; display:inline-grid; place-items:center; width:20px; height:20px;
+  border-radius:50%; background:#fff; color:var(--wine); font-size:12px; font-weight:700; margin-right:4px}
+
+.dm-pager{margin-top:var(--gap-3); display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.dm-pager > div{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:var(--gap)}
+.dm-pager h2{font-size:15px; margin:0 0 8px; color:var(--wine)}
+.dm-pager ul{margin:0; padding-left:18px}
+
+.dm-foot{border-top:1px solid var(--line); background:var(--surface-2); font-size:13.5px; color:var(--ink-3); padding-block:18px}
+
+/* ------------------------------------------------ hub page */
+.dm-flow{list-style:none; padding:0; margin:0; display:grid; gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); counter-reset:st}
+.dm-flow > li{background:var(--surface); border:1px solid var(--line); border-top:4px solid var(--wine);
+  border-radius:var(--radius); padding:14px 16px}
+.dm-flow h3{margin:0 0 4px; font-size:16px}
+.dm-flow h3 i{font-style:normal; color:var(--wine); margin-right:6px}
+.dm-flow p{margin:0 0 8px; font-size:14px; color:var(--ink-2)}
+.dm-flow ul{margin:0; padding-left:18px; font-size:14px}
+
+.dm-loop{font-size:14px; color:var(--ink-2); margin-top:10px}
+
+/* month-wise risk matrix */
+.dm-risk td.m{padding:0; text-align:center; min-width:30px}
+.dm-risk td.m span{display:block; height:22px; margin:3px 2px; border-radius:3px}
+.dm-risk .r1{background:var(--line-wine)}
+.dm-risk .r2{background:var(--wine)}
+.dm-risk thead th.m{text-align:center; font-size:12.5px}
+.dm-legend{display:flex; gap:16px; font-size:13px; color:var(--ink-3); margin:8px 0 0}
+.dm-legend span::before{content:""; display:inline-block; width:14px; height:12px; border-radius:2px; margin-right:6px; vertical-align:-1px}
+.dm-legend .l1::before{background:var(--line-wine)}
+.dm-legend .l2::before{background:var(--wine)}
+
+@media (max-width:640px){
+  .dm-top__row{flex-direction:column; align-items:flex-start}
+}

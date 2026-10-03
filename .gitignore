@@ -1,0 +1,13 @@
+# secrets and machine-specific settings
+config.local.php
+
+# records, PDFs and photos — data, not code
+storage/
+
+# OS / editor clutter
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,895 @@
+/* =============================================================================
+   CMER&TI — base stylesheet (shared across every page)
+   =============================================================================
+   No framework, no build step.
+
+   Matches texmin.gov.in as sampled directly from a screenshot: a light grey
+   page background, white content cards, and a single rich wine/plum accent
+   used solidly for active tabs, panels, buttons and links. No navy, no blue,
+   no gold — this replaces both earlier attempts.
+
+   Colours are CSS variables, so the whole site changes from the block below.
+   Page-specific rules do NOT belong here — see css/pages/<page>.css, linked
+   automatically by includes/header.php for the page that needs them.
+   ========================================================================== */
+
+:root{
+  /* palette — sampled from texmin.gov.in */
+  --wine:       #7a1442;
+  --wine-dark:  #59102f;
+  --wine-tint:  #f7e9f0;
+  --ink:        #262626;
+  --ink-2:      #4a4a4a;
+  --ink-3:      #6e6e6e;
+  --bg:         #ebebeb;
+  --surface:    #ffffff;
+  --surface-2:  #f5f5f5;
+  --line:       #e2e2e2;
+  --line-wine:  #e3c3d3;
+
+  /* spacing on an 8-point grid */
+  --gap:   16px;
+  --gap-2: 24px;
+  --gap-3: 40px;
+
+  --radius: 8px;
+  --shadow: 0 2px 10px rgba(0,0,0,.08);
+  --wrap:   1180px;
+
+  /* ---------------------------------------------- how a paragraph is set
+
+     Three numbers that decide the shape of every block of text on the site:
+     how wide a line may run, how far apart the lines sit, and how large the
+     letters are. They are variables rather than fixed numbers in thirty
+     places because they have to change with the language — see the block
+     immediately below.                                                     */
+
+  --measure:    100%;      /* fill the column the page gives it */
+  --prose-lh:   1.75;
+  --prose-size: 16.5px;
+}
+
+/* -------------------------------------------------- text in an Indian script
+
+   Devanagari and Assamese are not Latin with different letters. They hang
+   marks above the line and below it, they join, and their letterforms are
+   wider — so a line-height that looks airy in English crowds them, and can
+   clip the matra off the top of a word altogether. They also need a font
+   that actually contains the glyphs: Georgia does not, and a browser left to
+   improvise substitutes something that fits badly.
+
+   So the page's own language, which includes/header.php has already written
+   on to <html lang>, sets its own measure, leading and face. Nothing else in
+   the stylesheet has to know which language it is being read in.            */
+
+html[lang="hi"], html[lang="as"]{
+  --prose-lh:   2;
+  --prose-size: 17.5px;
+}
+
+html[lang="hi"] body, html[lang="as"] body{
+  font-family:"Noto Sans","Nirmala UI","Noto Sans Devanagari","Noto Sans Bengali",
+              "Kokila","Shonar Bangla","Segoe UI",system-ui,sans-serif;
+}
+
+html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4,
+html[lang="as"] h1, html[lang="as"] h2, html[lang="as"] h3, html[lang="as"] h4,
+html[lang="hi"] .dsection__h, html[lang="as"] .dsection__h{
+  font-family:"Noto Serif Devanagari","Noto Serif Bengali","Nirmala UI",Georgia,serif;
+  line-height:1.45;
+}
+
+/* The tighter leading used in tables, notes and figure captions is set for
+   Latin and is not enough for a script with marks above and below. Raised
+   here rather than in each rule, so there is one place to adjust it. */
+html[lang="hi"] .dtable tbody td, html[lang="as"] .dtable tbody td,
+html[lang="hi"] .dtable tbody th, html[lang="as"] .dtable tbody th,
+html[lang="hi"] .dtable thead th, html[lang="as"] .dtable thead th,
+html[lang="hi"] .prose td, html[lang="as"] .prose td,
+html[lang="hi"] .prose th, html[lang="as"] .prose th,
+html[lang="hi"] .dlist li, html[lang="as"] .dlist li,
+html[lang="hi"] .dnote, html[lang="as"] .dnote,
+html[lang="hi"] .dsection__note, html[lang="as"] .dsection__note{
+  line-height:1.85;
+}
+
+/* A long Devanagari or Assamese word must be allowed to move to the next line
+   whole. Never broken mid-word: a matra separated from its consonant is not
+   the same word, and on a page of technical instructions that matters. */
+html[lang="hi"] .prose, html[lang="as"] .prose,
+html[lang="hi"] .datapage, html[lang="as"] .datapage{
+  overflow-wrap:break-word; word-break:normal; hyphens:none;
+}
+
+/* --------------------------------------------------------------- reset */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:16px/1.7 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;
+}
+img{max-width:100%; height:auto}
+h1,h2,h3,h4{line-height:1.3; margin:0 0 .5em}
+p{margin:0 0 1.1em}
+a{color:var(--wine)}
+
+.inner{max-width:var(--wrap); margin:0 auto; padding-inline:var(--gap)}
+
+/* Focus must always be visible. Never remove this without replacing it. */
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:3px solid var(--wine); outline-offset:2px;
+}
+
+.skip{
+  position:absolute; left:-9999px; top:0; z-index:999;
+  background:var(--wine-dark); color:#fff; padding:10px 18px;
+}
+.skip:focus{left:0}
+
+/* --------------------------------------------------------------- government strip */
+.govbar{background:var(--wine-dark); color:#f3dbe6; font-size:12.5px}
+.govbar .inner{
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  min-height:36px; padding-block:6px;
+}
+.govbar strong{letter-spacing:.6px}
+.govbar span{opacity:.85}
+
+/* --------------------------------------------------------------- masthead */
+.masthead{background:var(--surface); border-bottom:3px solid var(--wine)}
+.masthead .inner{padding-block:18px}
+.brand{display:block; text-decoration:none; color:inherit}
+.brand__hi{
+  display:block; font-size:15px; font-weight:600; color:var(--ink-2); margin-bottom:2px;
+}
+.brand__en{
+  display:block; font:700 clamp(19px,2.4vw,27px)/1.25 Georgia,"Times New Roman",serif;
+  color:var(--wine-dark);
+}
+.brand__sub{display:block; font-size:13px; color:var(--ink-3); margin-top:3px}
+
+/* --------------------------------------------------------------- navigation
+   Sticky: the government strip and masthead scroll away, the nav bar itself
+   pins to the top of the viewport, same behaviour as texmin.gov.in. The
+   ".is-stuck" class (toggled from js/base.js once the page has actually
+   scrolled past the header) adds a shadow so the pinned bar reads as
+   "floating" rather than just clipped. */
+.nav{
+  background:var(--wine); position:sticky; top:0; z-index:100;
+  transition:box-shadow .2s ease;
+}
+.nav.is-stuck{box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.nav .inner{padding-inline:0}
+
+.nav__burger{
+  display:none; width:100%; min-height:48px; padding-inline:var(--gap);
+  background:none; border:0; border-bottom:1px solid rgba(255,255,255,.18);
+  color:#f3dbe6; font:600 15px/1 inherit; text-align:left; cursor:pointer;
+}
+
+.nav__list{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-wrap:wrap; max-width:var(--wrap); margin-inline:auto;
+}
+.nav__list > li{position:relative}
+.nav__list > li > a{
+  display:block; padding:14px 11px; color:#fff;
+  text-decoration:none; font-weight:600; font-size:14.5px;
+}
+.nav__list > li > a:hover,
+.nav__list > li.is-current > a{background:rgba(255,255,255,.14); color:#fff}
+.caret{font-size:10px; opacity:.75}
+
+/* --------------------------------------------------------- account / login
+   The item at the right-hand end of the bar: "Login" to a visitor, the staff
+   member's own name once they have signed in.
+
+   It lives here rather than in css/sections/diary.css because header.php draws
+   it on every page of the site, and a component drawn everywhere has to be
+   styled everywhere. Its metrics deliberately copy .nav__list > li > a above —
+   same padding, same font size, same line — so it sits on the bar at exactly
+   the height of Home, About and Research rather than setting its own. */
+
+.nav__item--account{margin-left:auto}
+
+.nav__list > li.nav__item--account > a{
+  /* The selector is written out in full to outrank ".nav__list > li > a",
+     which sets display:block a few rules above. At equal specificity source
+     order would settle it, but that rule is more specific — and an icon and a
+     label left as block-level children stack one above the other, which is
+     exactly how this item came to be three times the height of the bar. */
+  display:flex; align-items:center; gap:6px;
+  padding:14px 12px; line-height:1; font-size:14px;
+  white-space:nowrap;
+}
+/* Signed out it is one word and an arrow, and there is no dropdown, so it does
+   not need the caret's width either. Kept deliberately narrow: this is the one
+   item on the bar that is not the institute's own content. */
+.nav__acct-in{gap:6px}
+/* The icon is small and fixed. Without an explicit size an inline SVG with no
+   width/height attributes takes its intrinsic size, which is not small. */
+.nav__acct-icon{
+  width:16px; height:16px; flex:0 0 16px; display:block;
+}
+.nav__acct-name{
+  /* Capped so that a long first name cannot push the bar onto a second row.
+     Nine characters covers nearly every name on the roll; the few longer ones
+     are ellipsised, and the full name is in the panel underneath anyway. */
+  max-width:9ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* The panel is a short list, so it does not need the 262px minimum the
+   section dropdowns use, and it opens inward from the right-hand edge. */
+.nav__panel--account{left:auto; right:0}
+.nav__panel--account .nav__sub{min-width:230px}
+
+.nav__acct-who{
+  padding:10px 18px 12px; border-bottom:1px solid var(--line);
+  margin-bottom:6px; line-height:1.35;
+}
+.nav__acct-who strong{display:block; color:var(--wine-dark); font-size:14.5px}
+.nav__acct-who span{display:block; font-size:12.5px; color:var(--ink-3)}
+
+.nav__acct-rule{border-top:1px solid var(--line); margin-top:6px; padding-top:6px}
+
+/* Sign out is a button in a form, because a plain GET link would let any other
+   site sign our users out with an <img>. It is dressed to match the links
+   either side of it so that nobody has to know that. */
+.nav__acct-out button{
+  display:block; width:100%; text-align:left; border:0; background:none;
+  padding:9px 18px; font:inherit; font-size:14.5px; color:var(--ink);
+  cursor:pointer;
+}
+.nav__acct-out button:hover{background:var(--wine-tint); color:var(--wine)}
+
+/* The unread count, on the one control that appears on every page. */
+.nav__acct-badge{
+  display:inline-block; min-width:17px; padding:1px 5px; border-radius:999px;
+  background:#fff; color:var(--wine-dark);
+  font-size:11px; font-weight:700; line-height:1.45; text-align:center;
+}
+
+@media (max-width:900px){
+  .nav__item--account{margin-left:0; border-top:1px solid rgba(255,255,255,.18)}
+  .nav__list > li.nav__item--account > a{padding:13px var(--gap); min-height:48px}
+  .nav__panel--account{right:auto}
+  .nav__acct-name{max-width:none}
+  .nav__acct-who{border-bottom-color:rgba(255,255,255,.2)}
+  .nav__acct-who strong{color:#fff}
+  .nav__acct-who span{color:#f0b9d3}
+  .nav__acct-rule{border-top-color:rgba(255,255,255,.2)}
+  .nav__acct-out button{color:#fff; padding-left:34px; min-height:46px}
+  .nav__acct-out button:hover{background:rgba(255,255,255,.12); color:#fff}
+}
+
+/* --------------------------------------------------------------- dropdown
+   One panel per section. Where a section has pages that carry children, the
+   panel splits: the section's pages down the left, and a detail pane on the
+   right that fills in as the pointer moves down the list.
+
+   The children never leave the panel. Nothing flies out sideways, so nothing
+   can be pushed off the edge of the window or below the fold, and every item
+   stays inside one rectangle the pointer can move around freely. */
+
+.nav__panel{
+  position:absolute; top:100%; left:0;
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-top:3px solid var(--wine);
+  box-shadow:0 14px 34px rgba(28,10,20,.20);
+  border-radius:0 0 8px 8px;
+  z-index:20;
+  display:flex; align-items:stretch;
+  /* Clipped rather than display:none so it can animate. */
+  visibility:hidden; opacity:0; transform:translateY(-6px);
+  transition:opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+}
+.nav__item:hover > .nav__panel,
+.nav__item.is-open > .nav__panel,
+.nav__item:focus-within > .nav__panel{
+  visibility:visible; opacity:1; transform:translateY(0);
+  transition:opacity .18s ease, transform .18s ease, visibility 0s;
+}
+
+/* Near the right edge of the window the panel anchors to its right instead,
+   so a long section like Contact opens inward. Set by JS on open. */
+.nav__item.is-flipped > .nav__panel{left:auto; right:0}
+
+.nav__sub{
+  list-style:none; margin:0; padding:8px 0;
+  min-width:262px; max-width:300px;
+  /* Never taller than the space below the bar; scrolls internally if it is. */
+  max-height:min(70vh, 560px); overflow-y:auto;
+}
+.nav__panel--split .nav__sub{flex:0 0 auto}
+
+.nav__sub a{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:9px 18px; color:var(--ink);
+  text-decoration:none; font-size:14.5px; line-height:1.35;
+  position:relative;
+  transition:background .15s ease, color .15s ease, padding-left .15s ease;
+}
+.nav__sub a::before{
+  content:""; position:absolute; left:0; top:6px; bottom:6px; width:3px;
+  background:var(--wine); border-radius:0 3px 3px 0;
+  transform:scaleY(0); transform-origin:center;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1);
+}
+.nav__sub a:hover,
+.nav__sub li.is-active > a{
+  background:var(--wine-tint); color:var(--wine); padding-left:22px;
+}
+.nav__sub a:hover::before,
+.nav__sub li.is-active > a::before{transform:scaleY(1)}
+.nav__sub a[aria-current="page"]{color:var(--wine); font-weight:700}
+.nav__sub a[aria-current="page"]::before{transform:scaleY(1)}
+
+.caret--right{font-size:9px; opacity:.55; flex:0 0 auto; transition:transform .18s ease, opacity .18s ease}
+.nav__sub a:hover .caret--right,
+.nav__sub li.is-active > a .caret--right{transform:translateX(3px); opacity:1}
+
+/* ---- detail pane (third level, inside the same panel) ----
+
+   Closed to nothing until it has something to say. Most rows in a section
+   have no children, and a permanently reserved empty column would make every
+   dropdown look half-broken. It opens only when the pointer reaches a row
+   that actually branches, and closes again on any row that doesn't. */
+
+.nav__detail{
+  flex:0 0 auto;
+  width:0; opacity:0; overflow:hidden;
+  padding:0; border-left:0 solid var(--line);
+  background:linear-gradient(180deg, var(--surface-2), var(--surface));
+  max-height:min(70vh, 560px);
+  transition:width .26s cubic-bezier(.2,.8,.2,1),
+             opacity .18s ease,
+             padding .26s cubic-bezier(.2,.8,.2,1);
+}
+.nav__panel.has-branch .nav__detail{
+  width:300px; opacity:1;
+  padding:14px 6px 14px 0;
+  border-left-width:1px;
+  overflow-y:auto;
+}
+.nav__branch-title{
+  margin:0 18px 8px; font-size:11.5px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--wine);
+}
+.nav__branch ul{list-style:none; margin:0; padding:0}
+.nav__branch a{
+  display:block; padding:7px 18px; color:var(--ink-2);
+  text-decoration:none; font-size:13.8px; line-height:1.4;
+  border-radius:4px; transition:background .14s ease, color .14s ease, transform .14s ease;
+}
+.nav__branch a:hover{background:var(--wine-tint); color:var(--wine); transform:translateX(3px)}
+.nav__branch a[aria-current="page"]{color:var(--wine); font-weight:700}
+
+/* Children stagger in, so the eye follows the list rather than being hit
+   with the whole block at once. */
+.nav__branch[hidden]{display:none}
+.nav__branch li{
+  opacity:0; transform:translateX(-6px);
+  animation:navBranchIn .26s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes navBranchIn{to{opacity:1; transform:translateX(0)}}
+.nav__branch li:nth-child(1){animation-delay:.02s}
+.nav__branch li:nth-child(2){animation-delay:.045s}
+.nav__branch li:nth-child(3){animation-delay:.07s}
+.nav__branch li:nth-child(4){animation-delay:.095s}
+.nav__branch li:nth-child(5){animation-delay:.12s}
+.nav__branch li:nth-child(6){animation-delay:.145s}
+.nav__branch li:nth-child(n+7){animation-delay:.17s}
+
+@media (prefers-reduced-motion:reduce){
+  .nav__panel,.nav__sub a,.nav__branch a,.caret--right{transition:none}
+  .nav__branch li{animation:none; opacity:1; transform:none}
+}
+
+/* --------------------------------------------------------------- page heading */
+.pagebar{background:var(--surface-2); border-bottom:1px solid var(--line)}
+.pagebar .inner{
+  padding-block:20px; display:flex; gap:var(--gap);
+  align-items:baseline; justify-content:space-between; flex-wrap:wrap;
+}
+.pagebar h1{
+  margin:0; font:700 clamp(21px,2.6vw,30px)/1.25 Georgia,"Times New Roman",serif;
+  color:var(--wine-dark);
+}
+.crumbs{
+  list-style:none; display:flex; gap:8px; margin:0; padding:0;
+  font-size:13px; color:var(--ink-3); flex-wrap:wrap;
+}
+.crumbs li + li::before{content:"/"; margin-right:8px; opacity:.5}
+.crumbs a{color:var(--ink-3)}
+
+/* --------------------------------------------------------------- content */
+.content{padding-block:var(--gap-3)}
+
+/* Twenty years of content was pasted in by many different hands, so the markup
+   is inconsistent — inline widths, tables built for a 900px screen, white text
+   left over from a dark banner. These rules make all of it behave without
+   anyone having to go back and clean it up by hand. */
+
+/* The paragraph fills the column it is given, up to --measure, and never
+   overflows it. The column itself is already held to --wrap by .inner, so
+   "as wide as the page" means as wide as the rest of the site — the tables,
+   the cards and the navigation all end on the same line down the right. */
+.prose{max-width:min(var(--measure), 100%)}
+.prose p,.prose li,.prose dd,.prose blockquote{
+  font-size:var(--prose-size); line-height:var(--prose-lh);
+}
+.prose > :first-child{margin-top:0}
+.prose h2{font:700 clamp(19px,2vw,24px)/1.3 Georgia,serif; margin:1.7em 0 .5em; color:var(--wine-dark)}
+.prose h3{font:700 clamp(17px,1.7vw,20px)/1.3 Georgia,serif; margin:1.5em 0 .4em; color:var(--wine-dark)}
+.prose ul,.prose ol{margin:0 0 1.1em; padding-left:1.4em}
+.prose li{margin:.3em 0}
+.prose a{text-decoration:underline; text-underline-offset:2px}
+.prose img{border-radius:var(--radius); margin:.6em 0}
+.prose blockquote{
+  margin:1.4em 0; padding:.5em 0 .5em 18px;
+  border-left:3px solid var(--wine); color:var(--ink-2); font-style:italic;
+}
+
+/* Tables scroll sideways on a phone rather than breaking the layout. */
+.prose table{
+  width:100%; max-width:100%; border-collapse:collapse; margin:1.4em 0;
+  font-size:14px; display:block; overflow-x:auto;
+}
+@media (min-width:768px){ .prose table{display:table} }
+.prose th,.prose td{border:1px solid var(--line); padding:8px 11px; text-align:left; vertical-align:top}
+.prose th{background:var(--surface-2); font-weight:700; color:var(--wine-dark)}
+.prose tr:nth-child(even) td{background:#fafafa}
+
+/* Media dropped into a page must never be wider than the column it sits in.
+   The <video> element ignores the img rule above, because it is not an img. */
+.prose video,.prose iframe{max-width:100%; height:auto; border-radius:var(--radius)}
+.prose__video{margin:0 0 var(--gap-2)}
+.prose__video figcaption{font-size:14px; color:var(--ink-3); margin-top:6px; text-transform:capitalize}
+
+/* Photographs, as many to a row as the screen has room for. */
+.prose__gallery{
+  display:grid; gap:var(--gap); list-style:none; margin:0 0 var(--gap-2); padding:0;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+}
+.prose__gallery figure{margin:0}
+.prose__gallery img{width:100%; aspect-ratio:4/3; object-fit:cover; margin:0}
+.prose__gallery figcaption{font-size:13.5px; color:var(--ink-3); margin-top:6px; text-transform:capitalize}
+
+/* A name under a heading — the Director on his message, an editor's sign-off. */
+.prose__byline{color:var(--wine-dark); margin:0 0 1.4em}
+
+/* An address is set as an address: the lines stay lines, and it is not
+   italicised the way a browser does by default. */
+.prose__address{
+  font-style:normal; line-height:var(--prose-lh); margin:0 0 1.4em;
+  padding-left:14px; border-left:3px solid var(--line-wine);
+}
+
+/* The seventeen RTI disclosures, numbered as the Act numbers them. */
+.prose__rti{list-style:upper-roman}
+.prose__rti > li{margin:0 0 .7em}
+
+/* A bordered panel. Used on eight content pages carried over from the old
+   site, where it was a class with no stylesheet behind it — the pages were
+   asking for a box and getting bare text on the page background. */
+.borderbox{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:18px 20px; margin:0 0 var(--gap-2);
+}
+.borderbox > :first-child{margin-top:0}
+.borderbox > :last-child{margin-bottom:0}
+
+/* Old inline white text, from when it sat on a dark banner. */
+.prose [style*="color:#fff"],.prose [style*="color: #fff"],
+.prose [style*="color:#FFF"],.prose [style*="color:white"]{color:var(--ink) !important}
+
+/* --------------------------------------------------------------- buttons */
+.btn{
+  display:inline-block; padding:9px 18px; border-radius:6px;
+  border:1px solid var(--wine); color:var(--wine);
+  background:none; text-decoration:none; font-weight:600; font-size:14px;
+  transition:background .18s,color .18s;
+}
+.btn:hover{background:var(--wine); color:#fff}
+.btn--solid{background:var(--wine); color:#fff; border-color:var(--wine)}
+.btn--solid:hover{background:var(--wine-dark)}
+
+.pagenav{
+  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  margin-top:var(--gap-3); padding-top:var(--gap-2); border-top:1px solid var(--line);
+}
+
+/* --------------------------------------------------------------- generic cards
+   (the home page has its own hero and card tweaks in css/pages/home.css) */
+.cards{
+  display:grid; gap:var(--gap); margin:0; padding:0; list-style:none;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+}
+.card{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:20px; box-shadow:var(--shadow);
+}
+.card h2{
+  margin:0 0 10px; padding-bottom:8px; font-size:14px; font-weight:800;
+  letter-spacing:.7px; text-transform:uppercase;
+  color:var(--wine); border-bottom:2px solid var(--wine);
+}
+.card ul{list-style:none; margin:0; padding:0}
+.card li{margin:6px 0}
+.card a{color:var(--ink); text-decoration:none}
+.card a:hover{color:var(--wine); text-decoration:underline}
+
+/* Tab strip + panel pattern, in the style of the "Schemes and Services /
+   Vacancies / Tenders" block on texmin.gov.in: one solid wine tab active,
+   the rest white with wine text, all on a thin wine-tinted border. Available
+   to any page that wants it — see css/pages/home.css for a worked example. */
+.tabs{
+  display:flex; border:1px solid var(--line-wine); border-radius:6px 6px 0 0;
+  overflow:hidden;
+}
+.tabs button,.tabs a{
+  flex:1; padding:16px 20px; background:var(--surface); color:var(--wine);
+  border:0; border-right:1px solid var(--line-wine); font-weight:700; font-size:15px;
+  text-align:left; text-decoration:none; cursor:pointer;
+}
+.tabs button:last-child,.tabs a:last-child{border-right:0}
+.tabs button[aria-selected="true"],.tabs a.is-active{
+  background:var(--wine); color:#fff;
+}
+.tab-panel{
+  border:1px solid var(--line-wine); border-top:0; background:var(--surface);
+  border-radius:0 0 6px 6px;
+}
+.tab-panel ul{list-style:none; margin:0; padding:0}
+.tab-panel li{border-bottom:1px solid var(--wine-tint)}
+.tab-panel li:last-child{border-bottom:0}
+.tab-panel a{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:16px 20px; color:var(--ink); text-decoration:none;
+}
+.tab-panel a:hover{background:var(--wine-tint); color:var(--wine)}
+.tab-panel a::after{content:"\276F"; color:var(--wine); font-size:14px}
+
+/* Solid wine panel of stacked links, for a sidebar (e.g. Tenders/Notices). */
+.wine-panel{background:var(--wine); color:#fff; border-radius:8px; padding:4px 0}
+.wine-panel ul{list-style:none; margin:0; padding:0}
+.wine-panel li{border-bottom:1px solid rgba(255,255,255,.25)}
+.wine-panel li:last-child{border-bottom:0}
+.wine-panel a{
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:16px 20px; color:#fff; text-decoration:none; font-size:14.5px; line-height:1.4;
+}
+.wine-panel a:hover{background:rgba(255,255,255,.08)}
+.wine-panel a::after{content:"\276F"; opacity:.85}
+
+/* --------------------------------------------------------------- footer */
+.footer{background:var(--wine-dark); color:#f3dbe6; margin-top:var(--gap-3)}
+.footer__cols{
+  display:grid; gap:var(--gap-2); padding-block:var(--gap-3);
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+}
+.footer__col h2{
+  font-size:13px; font-weight:800; letter-spacing:.6px; text-transform:uppercase;
+  color:#f0b9d3; margin:0 0 10px;
+}
+.footer__col ul{list-style:none; margin:0; padding:0}
+.footer__col li{margin:5px 0}
+.footer__col a{color:#f3dbe6; text-decoration:none; font-size:14px}
+.footer__col a:hover{color:#fff; text-decoration:underline}
+
+/* GIGW mandatory policy links, above the copyright line. */
+.footer__policies{background:rgba(0,0,0,.12); border-top:1px solid rgba(255,255,255,.12)}
+.footer__policies .inner{padding-block:14px}
+.footer__policies-h{
+  margin:0 0 8px; font:700 12px/1 inherit; color:#f0b9d3;
+  text-transform:uppercase; letter-spacing:.06em;
+}
+.footer__policies ul{
+  list-style:none; margin:0; padding:0;
+  display:flex; flex-wrap:wrap; gap:6px 0;
+}
+.footer__policies li{display:flex; align-items:center}
+.footer__policies li + li::before{
+  content:"|"; color:rgba(255,255,255,.3); margin:0 12px;
+}
+.footer__policies a{color:#f7e3ec; font-size:13px; text-decoration:none}
+.footer__policies a:hover{color:#fff; text-decoration:underline}
+
+.footer__base{background:rgba(0,0,0,.2); font-size:13px}
+.footer__base .inner{padding-block:16px}
+.footer__base p{margin:0 0 4px; opacity:.88}
+.footer__base a{color:#f0b9d3}
+
+/* --------------------------------------------------------------- data pages
+   The technical pages (muga culture, ericulture, crop protection, PCT) are
+   mostly tables of standards and figures. These classes are shared by all of
+   them rather than repeated in thirty per-page files. */
+
+.datapage{max-width:none}
+.datapage__intro{
+  max-width:min(var(--measure), 100%); color:var(--ink-2); line-height:1.7; margin:0 0 var(--gap-2);
+  font-size:15.5px;
+}
+
+.dsection{margin:0 0 var(--gap-3)}
+.dsection__h{
+  font:700 clamp(17px,1.8vw,21px)/1.3 Georgia,serif;
+  color:var(--wine-dark); margin:0 0 4px;
+  border-bottom:2px solid var(--line-wine); padding-bottom:8px;
+}
+.dsection__note{font-size:13px; color:var(--ink-3); margin:6px 0 14px; line-height:1.6}
+.dsection > p{max-width:min(var(--measure), 100%); line-height:var(--prose-lh)}
+
+/* Table. Scrolls sideways on a phone instead of breaking the page. */
+.dtable-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); margin:14px 0}
+.dtable{width:100%; border-collapse:collapse; font-size:14px}
+.dtable thead th{
+  background:var(--wine); color:#fff; text-align:left;
+  font-weight:700; padding:10px 14px; white-space:nowrap;
+}
+.dtable tbody td,.dtable tbody th{
+  padding:9px 14px; border-top:1px solid var(--line);
+  vertical-align:top; line-height:1.55; text-align:left;
+}
+.dtable tbody th{font-weight:700; color:var(--wine-dark); white-space:nowrap}
+.dtable tbody tr:nth-child(even) td,
+.dtable tbody tr:nth-child(even) th{background:var(--surface-2)}
+.dtable tbody tr.is-total td,
+.dtable tbody tr.is-total th{font-weight:700; background:var(--wine-tint); color:var(--wine-dark)}
+.dtable .num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* Callout for the "read this before you use the number above" paragraphs. */
+.dnote{
+  background:var(--wine-tint); border-left:4px solid var(--wine);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:14px 18px; margin:16px 0; font-size:14px; line-height:1.65;
+  color:var(--ink-2); max-width:min(var(--measure), 100%);
+}
+.dnote strong{color:var(--wine-dark)}
+
+/* Key-figure strip. */
+.dstats{display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); margin:0 0 var(--gap-2)}
+.dstat{
+  background:var(--surface); border:1px solid var(--line);
+  border-top:4px solid var(--wine); border-radius:var(--radius); padding:16px 18px;
+}
+.dstat strong{display:block; font-size:26px; line-height:1.1; color:var(--wine); font-variant-numeric:tabular-nums}
+.dstat span{display:block; font-size:12.5px; color:var(--ink-3); margin-top:4px; text-transform:uppercase; letter-spacing:.04em}
+
+/* Bulleted findings under a table. */
+.dlist{margin:14px 0; padding-left:0; list-style:none; max-width:min(var(--measure), 100%)}
+.dlist li{position:relative; padding-left:20px; margin:0 0 10px; line-height:1.65; font-size:14.5px}
+.dlist li::before{content:"\25AA"; position:absolute; left:2px; color:var(--wine)}
+
+/* Landing-page card grid for a parent page that indexes its children. */
+.dcards{display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); list-style:none; margin:0; padding:0}
+.dcard{
+  background:var(--surface); border:1px solid var(--line);
+  border-left:4px solid var(--wine); border-radius:var(--radius);
+  padding:18px 20px; transition:box-shadow .18s ease, transform .18s ease;
+}
+.dcard:hover{box-shadow:0 6px 18px rgba(122,20,66,.13); transform:translateY(-1px)}
+.dcard a{font-weight:700; color:var(--wine-dark); text-decoration:none; font-size:15.5px}
+.dcard a:hover{color:var(--wine); text-decoration:underline}
+.dcard p{margin:6px 0 0; font-size:13.5px; color:var(--ink-3); line-height:1.6}
+
+/* --------------------------------------------------------------- mobile
+   48px targets. A thumb is about 45px wide, and the guideline exists because
+   of that, not because of a design fashion. */
+
+@media (max-width:900px){
+  .nav__burger{display:block}
+  .nav__list{display:none; flex-direction:column}
+  .nav__list.is-open{display:flex}
+  .nav__list > li > a{padding:13px var(--gap); min-height:48px; display:flex; align-items:center}
+  /* The whole panel becomes part of the stack — no floating, no hover, and
+     the detail pane sits below its list rather than beside it. A touchscreen
+     has no pointer to hover with, so everything is simply open. */
+  .nav__panel{
+    position:static; display:none; flex-direction:column;
+    box-shadow:none; border:0; border-radius:0;
+    background:rgba(255,255,255,.08);
+    visibility:visible; opacity:1; transform:none; transition:none;
+    max-height:none;
+  }
+  .nav__item:hover > .nav__panel{display:none}
+  .nav__item.is-open > .nav__panel{display:flex}
+
+  .nav__sub{
+    min-width:0; max-width:none; max-height:none; overflow:visible;
+    padding:0;
+  }
+  .nav__panel--split .nav__sub{border-right:0}
+  .nav__sub a{
+    color:#fff; padding-left:34px; min-height:46px;
+    background:none;
+  }
+  .nav__sub a::before{display:none}
+  .nav__sub a:hover,
+  .nav__sub li.is-active > a{background:rgba(255,255,255,.12); color:#fff; padding-left:34px}
+
+  /* Stacked layout: the pane is always open and full width, because there is
+     no pointer to reveal it with. Undo the desktop collapse. */
+  .nav__detail{
+    width:auto; opacity:1; overflow:visible;
+    min-width:0; max-width:none; max-height:none;
+    border-left:0; transition:none;
+    background:rgba(0,0,0,.16); padding:6px 0;
+  }
+  .nav__branch{display:block !important}   /* [hidden] is a desktop-only device */
+  .nav__branch-title{color:#f0b9d3; margin:10px 34px 4px}
+  .nav__branch a{
+    color:#fff; padding-left:52px; min-height:42px;
+    display:flex; align-items:center; font-size:13.5px; border-radius:0;
+  }
+  .nav__branch a:hover{background:rgba(255,255,255,.12); transform:none}
+  .nav__branch li{opacity:1; transform:none; animation:none}
+  .caret--right{display:none}
+
+  .tabs{flex-direction:column}
+  .tabs button,.tabs a{border-right:0; border-bottom:1px solid var(--line-wine)}
+  .tabs button:last-child,.tabs a:last-child{border-bottom:0}
+}
+
+/* --------------------------------------------------------------- print
+   These pages get printed and filed, so links are spelled out. */
+
+@media print{
+  .govbar,.nav,.footer,.pagenav,.skip{display:none !important}
+  body{background:#fff; color:#000; font-size:12pt}
+  .prose{max-width:none}
+  .prose table{display:table}
+  .prose a[href^="http"]::after{content:" (" attr(href) ")"; font-size:9pt; color:#555}
+}
+
+/* =============================================================================
+   Emblems, and the language chooser
+   ============================================================================= */
+
+/* --------------------------------------------------------------- masthead
+   Central Silk Board on the left, the institute's name in the middle, the
+   Ministry and the Vanya Silk mark on the right — the order the letterhead
+   uses. The name is the flexible column, so the emblems keep their size and
+   the text reflows around them. */
+
+.masthead__inner{
+  display:grid; align-items:center; gap:14px 22px;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:"left brand right";
+  padding-block:14px;
+}
+.masthead .brand{grid-area:brand}
+
+.masthead__logo{display:flex; align-items:center; gap:16px; flex:0 0 auto}
+.masthead__logo--right{flex-wrap:wrap; justify-content:flex-end; gap:12px 16px}
+.masthead__logo--left{grid-area:left}
+.masthead__logo--right{grid-area:right}
+
+/* Heights, not widths: the three marks have quite different aspect ratios and
+   matching their heights is what makes them look like a set. */
+.masthead__img{display:block; width:auto; object-fit:contain}
+.masthead__img--csb{height:72px}
+.masthead__img--ministry{height:52px}
+.masthead__img--vanya{height:52px}
+
+/* ------------------------------------------------------- language control
+   A globe and the language you are reading, beside the emblems. Click it and
+   three choices drop out. It is a <details> element, so it opens without any
+   script at all — see the note in includes/header.php for why that matters on
+   this particular control. */
+
+.langmenu{position:relative; flex:0 0 auto; margin-left:4px}
+
+.langmenu > summary{
+  display:flex; align-items:center; gap:6px;
+  padding:6px 10px; border:1px solid var(--line); border-radius:999px;
+  background:var(--surface); color:var(--ink-2);
+  font-size:12.5px; font-weight:600; line-height:1;
+  cursor:pointer; list-style:none; white-space:nowrap;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.langmenu > summary::-webkit-details-marker{display:none}   /* Safari's triangle */
+.langmenu > summary:hover{background:var(--wine-tint); color:var(--wine); border-color:var(--line-wine)}
+.langmenu > summary:focus-visible{outline:3px solid var(--wine); outline-offset:2px}
+.langmenu[open] > summary{background:var(--wine); color:#fff; border-color:var(--wine)}
+
+.langmenu__globe{width:15px; height:15px; flex:0 0 15px; display:block}
+.langmenu__caret{font-size:9px; opacity:.7}
+
+.langmenu__panel{
+  position:absolute; top:calc(100% + 6px); right:0; z-index:120;
+  min-width:186px; padding:5px;
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-radius:var(--radius); box-shadow:0 14px 34px rgba(28,10,20,.20);
+}
+
+.langmenu__item{
+  display:flex; align-items:baseline; gap:8px;
+  padding:9px 11px; border-radius:6px; text-decoration:none; color:var(--ink);
+  transition:background .14s ease, color .14s ease;
+}
+.langmenu__item:hover{background:var(--wine-tint); color:var(--wine)}
+.langmenu__item.is-on{background:var(--wine); color:#fff}
+.langmenu__native{font-size:14.5px; font-weight:700}
+.langmenu__latin{font-size:11.5px; color:var(--ink-3)}
+.langmenu__item.is-on .langmenu__latin{color:rgba(255,255,255,.8)}
+.langmenu__tick{margin-left:auto; font-size:13px}
+
+@media (max-width:820px){
+  .masthead__inner{
+    grid-template-columns:auto auto;
+    grid-template-areas:"left right" "brand brand";
+    justify-content:space-between; text-align:left;
+  }
+  .masthead__img--csb{height:56px}
+  .masthead__img--ministry,.masthead__img--vanya{height:40px}
+}
+
+/* ------------------------------------------------------- language chooser
+   Asked once, on the first page of a visit. Anchored to the bottom of the
+   window rather than thrown across the middle of it: somebody who came for the
+   muga crop calendar can read the calendar and answer this afterwards, or not
+   at all. Closing it means English, which is what a default has to mean. */
+
+.langpick{
+  position:fixed; inset:auto 0 0 0; z-index:400;
+  display:flex; justify-content:center; padding:0 16px 20px;
+  animation:langUp .28s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes langUp{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+.langpick[hidden]{display:none}
+
+.langpick__box{
+  position:relative; width:100%; max-width:560px;
+  background:var(--surface); border:1px solid var(--line-wine);
+  border-top:4px solid var(--wine); border-radius:var(--radius);
+  box-shadow:0 18px 50px rgba(28,10,20,.28);
+  padding:20px 24px 18px;
+}
+.langpick__x{
+  position:absolute; top:8px; right:10px; width:34px; height:34px;
+  border:0; background:none; color:var(--ink-3);
+  font-size:24px; line-height:1; cursor:pointer; border-radius:6px;
+}
+.langpick__x:hover{background:var(--surface-2); color:var(--wine)}
+
+.langpick__h{
+  margin:0 0 6px; font:700 17px/1.35 Georgia,serif; color:var(--wine-dark);
+  display:flex; flex-wrap:wrap; gap:0 10px;
+}
+/* The heading is shown in all three languages at once, because the one person
+   who most needs this dialog is the one who cannot read the other two. */
+.langpick__h span + span::before{content:"· "; color:var(--line-wine)}
+
+.langpick__p{margin:0 0 14px; font-size:14px; color:var(--ink-2)}
+
+.langpick__choices{display:grid; gap:10px; grid-template-columns:repeat(3,1fr)}
+@media (max-width:520px){ .langpick__choices{grid-template-columns:1fr} }
+
+.langpick__btn{
+  display:block; text-align:center; text-decoration:none;
+  padding:13px 10px; border-radius:var(--radius);
+  border:1px solid var(--line-wine); background:var(--surface);
+  transition:background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.langpick__btn:hover{background:var(--wine-tint); border-color:var(--wine); transform:translateY(-1px)}
+.langpick__btn.is-default{background:var(--wine); border-color:var(--wine)}
+.langpick__btn.is-default strong,.langpick__btn.is-default em{color:#fff}
+.langpick__btn strong{display:block; font-size:17px; color:var(--wine-dark); line-height:1.3}
+.langpick__btn em{display:block; font-style:normal; font-size:11.5px; color:var(--ink-3); margin-top:2px}
+
+.langpick__note{margin:14px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+
+@media (prefers-reduced-motion:reduce){ .langpick{animation:none} }
+@media print{ .langpick,.langmenu{display:none !important} }
+
+/* A quiet line on a translated page saying which parts are translated. Quiet
+   on purpose: it is a footnote about the site, not a warning about the page. */
+.langnote{
+  font-size:12.5px; line-height:1.6; color:var(--ink-3);
+  background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--line-wine); border-radius:0 6px 6px 0;
+  padding:8px 14px; margin:var(--gap) 0 0;
+}
+.langnote a{margin-left:8px; font-weight:600}
+.langnote__bh{display:block; color:var(--ink-2)}

@@ -1,0 +1,72 @@
+/* Disease Monitoring — the recording screens. Builds on base.css and diary.css. */
+
+.dm-user{display:flex; align-items:center; gap:12px; margin:0; color:#fff; font-size:14px}
+.dm-user button{font:inherit; font-size:13.5px; background:transparent; color:#fff;
+  border:1px solid rgba(255,255,255,.6); border-radius:6px; padding:6px 12px; cursor:pointer}
+.dm-user button:hover{background:rgba(255,255,255,.15)}
+
+.dm-fieldset{border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
+  padding:18px 20px 20px; margin:0 0 var(--gap-2)}
+.dm-fieldset legend{font-weight:700; color:var(--wine); padding:0 8px; font-size:16px}
+.dm-fieldset .diary-grid{display:grid; gap:14px 18px; grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.dm-fieldset textarea{min-height:90px !important}
+
+.req{color:#b3261e}
+.dm-err{color:#b3261e; font-size:13px; margin:2px 0 0}
+.diary-field.has-err input, .diary-field.has-err select{border-color:#b3261e}
+
+/* findings grid */
+.dm-findings{width:100%; border-collapse:collapse}
+.dm-findings th, .dm-findings td{padding:8px 10px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle}
+.dm-findings thead th{font-size:12.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3)}
+.dm-findings td.inc{width:140px}
+.dm-findings td.inc input{width:110px; min-height:40px; font:inherit; padding:8px 10px;
+  border:1px solid var(--line); border-radius:6px}
+.dm-findings .grp td{background:var(--surface-2); font-weight:700; color:var(--wine); font-size:13.5px}
+.dm-findings tr.is-other{display:none}
+.dm-findings .adv{font-size:13px; color:var(--ink-3)}
+
+/* severity pills */
+.sev{display:inline-block; padding:2px 10px; border-radius:999px; font-size:12.5px; font-weight:700; white-space:nowrap}
+.sev--high{background:#f8d7da; color:#842029}
+.sev--moderate{background:#ffecc8; color:#7a4b00}
+.sev--low{background:#ddf0dd; color:#1e5b1e}
+.sev--none{background:#ebebeb; color:#555}
+
+.dm-alerts{margin:0 0 var(--gap-2); padding:12px 16px 12px 34px; background:#fdeaea;
+  border:1px solid #e6b3b0; border-radius:var(--radius); color:#7f1d1a}
+.dm-alerts li{margin:4px 0}
+
+.dm-kv{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px 24px; margin:0}
+.dm-kv div{border-bottom:1px solid var(--line); padding:6px 0}
+.dm-kv dt{font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3)}
+.dm-kv dd{margin:2px 0 0; font-size:15px}
+
+.dm-actions{display:flex; flex-wrap:wrap; gap:10px; margin:0 0 var(--gap-2)}
+.dm-actions form{margin:0}
+.dm-photo{max-width:100%; max-height:420px; border-radius:var(--radius); border:1px solid var(--line)}
+
+.dm-table{width:100%; border-collapse:collapse; background:var(--surface); border-radius:var(--radius); overflow:hidden}
+.dm-table th, .dm-table td{padding:9px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; font-size:14.5px}
+.dm-table thead th{background:var(--wine); color:#fff; font-size:13px}
+.dm-table td.num, .dm-table th.num{text-align:right; font-variant-numeric:tabular-nums}
+.dm-wrap{overflow-x:auto}
+
+.dm-filter{display:grid; gap:10px 14px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  align-items:end; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; margin:0 0 var(--gap-2)}
+.dm-filter .diary-field input, .dm-filter .diary-field select{min-height:40px; padding:8px 10px; font-size:14px}
+
+.dm-bars{display:grid; gap:8px; margin:0}
+.dm-bar{display:grid; grid-template-columns:minmax(140px,240px) 1fr 48px; gap:10px; align-items:center; font-size:14px}
+.dm-bar__track{background:var(--surface-2); border-radius:4px; height:14px; overflow:hidden}
+.dm-bar__fill{display:block; height:100%; background:var(--wine)}
+.dm-bar__n{text-align:right; font-variant-numeric:tabular-nums}
+
+.dm-two{margin-bottom:var(--gap-3); display:grid; gap:var(--gap-2); grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.dm-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px}
+.dm-card h2{font-size:16px; margin:0 0 12px; color:var(--wine)}
+
+@media print{
+  .dm-top, .dm-foot, .dm-actions, .dm-filter{display:none}
+}

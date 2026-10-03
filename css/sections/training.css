@@ -1,0 +1,223 @@
+/* =============================================================================
+   Section: Training & Extension
+   File: css/sections/training.css
+   =============================================================================
+   Loaded on every page of the Training & Extension section. The Service pages
+   (Disease Forewarning, Soil Health Card, Infrastructure) are the only pages
+   in the site that carry photographs alongside tables, so the figure and
+   gallery rules live here rather than in css/base.css — nothing outside this
+   section uses them.
+
+   Shared header/nav/footer/typography and the .datapage / .dtable / .dnote
+   families live in css/base.css. Do not repeat them here.
+   ========================================================================== */
+
+
+/* ------------------------------------------------------------------ figures
+   A picture with a caption under it. The border and tint match .dcard so a
+   photograph and a card sit at the same visual weight on a page that has
+   both. */
+
+.svcfig{
+  margin:0;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+
+.svcfig img{
+  display:block;
+  width:100%;
+  height:auto;
+  background:var(--surface-2);
+}
+
+.svcfig figcaption{
+  padding:10px 14px;
+  font-size:13px;
+  line-height:1.55;
+  color:var(--ink-3);
+  border-top:1px solid var(--line);
+}
+
+/* The forewarning calendars are wide charts — month columns across a year.
+   Half a column makes the month labels illegible, so they take the full
+   width and scroll sideways on a phone rather than shrinking further. */
+.svcfig--wide{
+  margin:16px 0;
+  max-width:100%;
+}
+.svcfig--wide img{min-width:0}
+
+
+/* ----------------------------------------------------------------- galleries
+   Same auto-fill grid as .dcards, so photographs and cards line up on a page
+   that shows both. minmax is a little narrower because these are photographs
+   rather than blocks of text. */
+
+.svcgrid{
+  display:grid;
+  gap:var(--gap);
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  margin:14px 0 var(--gap-2);
+}
+
+
+/* ----------------------------------------------------------------- documents
+   The PDF list under a Service page. A document that has not been copied into
+   this site yet is still listed, greyed and labelled, so that what is missing
+   is visible rather than silently absent. */
+
+.svcdocs{
+  list-style:none;
+  margin:14px 0;
+  padding:0;
+  max-width:min(var(--measure), 100%);
+}
+
+.svcdocs li{
+  position:relative;
+  padding:9px 0 9px 26px;
+  border-bottom:1px solid var(--line);
+  line-height:1.6;
+  font-size:14.5px;
+}
+.svcdocs li:last-child{border-bottom:0}
+
+.svcdocs li::before{
+  content:"\1F4C4";              /* page glyph */
+  position:absolute; left:0; top:9px;
+  font-size:13px;
+  opacity:.75;
+}
+
+.svcdocs a{
+  font-weight:700;
+  color:var(--wine-dark);
+  text-decoration:none;
+}
+.svcdocs a:hover{color:var(--wine); text-decoration:underline}
+
+.svcdocs__note{
+  display:block;
+  font-size:12.5px;
+  color:var(--ink-3);
+  margin-top:2px;
+}
+
+.svcdocs li.is-missing{opacity:.62}
+.svcdocs li.is-missing span:first-of-type{font-weight:700; color:var(--ink-2)}
+
+
+/* --------------------------------------------------------- control measures
+   Forewarning control measures read as: pest, then one line per method.
+   A definition list carries that shape honestly, and a screen reader announces
+   the method name as the term it is. */
+
+.svcmeasures{
+  margin:14px 0;
+  max-width:min(var(--measure), 100%);
+}
+
+.svcmeasure{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--wine);
+  border-radius:var(--radius);
+  padding:14px 18px;
+  margin:0 0 12px;
+}
+
+.svcmeasure > h3{
+  font:700 15.5px/1.35 Georgia,serif;
+  color:var(--wine-dark);
+  margin:0 0 8px;
+}
+
+.svcmeasure dl{margin:0}
+
+.svcmeasure dt{
+  font-weight:700;
+  font-size:13px;
+  color:var(--wine);
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  margin:8px 0 2px;
+}
+.svcmeasure dt:first-child{margin-top:0}
+
+.svcmeasure dd{
+  margin:0;
+  font-size:14px;
+  line-height:1.65;
+  color:var(--ink-2);
+}
+
+
+/* ------------------------------------------------------------------- mobile */
+
+@media (max-width:640px){
+  .svcgrid{grid-template-columns:1fr}
+}
+
+
+/* ------------------------------------------------------------ success story
+   A named farmer, with a photograph, the figures from his own holding, and
+   his own words. The portrait is deliberately small — the one available is
+   183px wide, and blowing it up would only make it worse. */
+
+.story__head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:var(--gap);
+  align-items:start;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--wine);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  margin:0 0 var(--gap-2);
+}
+
+.story__portrait{
+  width:120px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  display:block;
+}
+
+.story__meta{margin:0}
+.story__meta dt{
+  font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--wine); font-weight:700; margin:8px 0 1px;
+}
+.story__meta dt:first-child{margin-top:0}
+.story__meta dd{margin:0; font-size:15px; color:var(--ink-2); line-height:1.5}
+.story__meta dd strong{color:var(--wine-dark)}
+
+/* The farmer's own words. Larger than body text and set in the serif, because
+   a quotation that looks like a caption reads like one. */
+.storyquote{
+  background:var(--wine-tint);
+  border-left:4px solid var(--wine);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:20px 24px;
+  margin:18px 0;
+  max-width:min(var(--measure), 100%);
+}
+.storyquote blockquote{
+  margin:0;
+  font:italic 400 clamp(16px,1.6vw,18.5px)/1.6 Georgia,serif;
+  color:var(--wine-dark);
+}
+.storyquote figcaption{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--ink-3);
+}
+
+@media (max-width:520px){
+  .story__head{grid-template-columns:1fr}
+  .story__portrait{width:100px}
+}

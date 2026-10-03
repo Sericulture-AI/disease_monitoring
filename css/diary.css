@@ -1,0 +1,974 @@
+/* =============================================================================
+   CMER&TI — work diary
+   =============================================================================
+   Loaded by includes/header.php for every page whose $SECTION is 'diary'.
+
+   NO NEW COLOURS. Everything here is built from the variables already declared
+   in css/base.css — --wine, --wine-dark, --wine-tint, --ink, --line and the
+   rest. The diary is a part of this site that happens to be a tool, not a
+   separate application wearing the site's header, and the quickest way to make
+   it look like a separate application is to introduce a second palette.
+
+   The table, card, note and stat classes from base.css (.dtable, .dstat,
+   .dnote, .dsection) are reused rather than reinvented, so a figure in the
+   diary is set exactly like a figure on the statistics pages.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   The account item in the navigation bar USED TO BE STYLED HERE, and that was
+   a mistake worth recording: this file is loaded only on pages whose $SECTION
+   is 'diary', but the account item is drawn by includes/header.php on EVERY
+   page of the site. On the home page it therefore had no rules at all — the
+   icon fell back to the SVG's own intrinsic size and stacked above the word
+   "Login", making the whole bar three times taller.
+
+   Those rules now live in css/base.css, beside the rest of the navigation,
+   because that is where a component that appears on every page belongs.
+   --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------- layout */
+
+.diary{max-width:none}
+.diary--narrow{max-width:880px}
+
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ------------------------------------------------------------ the tab strip */
+
+.diary-tabs{
+  display:flex; align-items:center; gap:4px; flex-wrap:wrap;
+  border-bottom:2px solid var(--line-wine); margin:0 0 var(--gap-2); padding-bottom:0;
+}
+.diary-tabs ul{
+  list-style:none; display:flex; flex-wrap:wrap; gap:2px; margin:0; padding:0; flex:1 1 auto;
+}
+.diary-tabs a{
+  display:block; padding:11px 16px; color:var(--ink-2); text-decoration:none;
+  font-weight:600; font-size:14.5px; border-radius:6px 6px 0 0;
+  border-bottom:3px solid transparent; margin-bottom:-2px;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.diary-tabs a:hover{background:var(--wine-tint); color:var(--wine)}
+.diary-tabs a[aria-current="page"]{
+  color:var(--wine-dark); border-bottom-color:var(--wine); background:var(--surface);
+}
+.diary-tabs__add{flex:0 0 auto; margin:0 0 8px; padding:8px 16px; font-size:14px}
+
+/* --------------------------------------------------------------- messages */
+
+.diary-flash{
+  border-radius:var(--radius); padding:12px 16px; margin:0 0 var(--gap-2);
+  font-size:14.5px; line-height:1.6; border-left:4px solid;
+}
+.diary-flash ul{margin:6px 0 0; padding-left:1.2em}
+.diary-flash--ok{background:var(--wine-tint); border-color:var(--wine); color:var(--wine-dark)}
+.diary-flash--bad{background:#fdeaea; border-color:#b3261e; color:#7f1d1a}
+
+/* ---------------------------------------------------------------- filters */
+
+.diary-filters{
+  display:flex; flex-wrap:wrap; gap:12px 14px; align-items:flex-end;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:16px 18px; margin:0 0 var(--gap-2);
+  box-shadow:var(--shadow);
+}
+.diary-filters--slim{box-shadow:none}
+.diary-filters__do{display:flex; gap:8px; align-items:center}
+.diary-filters__out{
+  display:flex; gap:16px; align-items:center; margin-left:auto;
+  padding-left:16px; border-left:1px solid var(--line);
+}
+.diary-outlink{
+  font-size:13.5px; font-weight:600; color:var(--wine); text-decoration:none; white-space:nowrap;
+}
+.diary-outlink:hover{text-decoration:underline}
+
+/* ------------------------------------------------------------------ forms */
+
+.diary-form{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:22px 24px; box-shadow:var(--shadow);
+  margin:0 0 var(--gap-2);
+}
+.diary-form--inline{display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap}
+
+.diary-grid{
+  display:grid; gap:14px 18px;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+}
+.diary-field{display:flex; flex-direction:column; gap:5px; min-width:0}
+.diary-field--wide{grid-column:1 / -1}
+.diary-field--grow{flex:1 1 200px}
+
+.diary-field label{
+  font-size:12.5px; font-weight:700; letter-spacing:.03em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+.req{color:var(--wine)}
+
+.diary-field input,
+.diary-field select,
+.diary-field textarea{
+  font:inherit; font-size:15px; color:var(--ink);
+  border:1px solid var(--line); border-radius:6px;
+  padding:10px 12px; background:var(--surface);
+  /* 44px minimum, for the same reason base.css uses 48px targets on the
+     phone: a control you cannot reliably hit is a control that is not there. */
+  min-height:44px; width:100%; max-width:100%;
+}
+.diary-field textarea{min-height:150px; line-height:1.65; resize:vertical}
+.diary-field input:focus,
+.diary-field select:focus,
+.diary-field textarea:focus{
+  outline:3px solid var(--wine); outline-offset:1px; border-color:var(--wine);
+}
+.diary-field input[type="file"]{padding:9px 10px; background:var(--surface-2)}
+
+.diary-hint{
+  font-size:13px; color:var(--ink-3); line-height:1.6; margin:2px 0 0; max-width:70ch;
+}
+.diary-hint--center{text-align:center; margin-inline:auto}
+
+.diary-actions{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  margin-top:var(--gap-2); padding-top:var(--gap); border-top:1px solid var(--line);
+}
+.diary-submit{margin-top:6px}
+
+.btn--danger{border-color:#b3261e; color:#b3261e}
+.btn--danger:hover{background:#b3261e; color:#fff}
+.diary-danger{margin-left:auto}
+
+/* ------------------------------------------------------------- sign-in page */
+
+.diary-login{display:grid; gap:var(--gap-2); grid-template-columns:minmax(0,1fr) minmax(0,.85fr)}
+@media (max-width:820px){ .diary-login{grid-template-columns:1fr} }
+
+.diary-login__lead{font-size:14.5px; color:var(--ink-2); margin:0 0 18px; line-height:1.65}
+.diary-login__note{font-size:13px; color:var(--ink-3); line-height:1.6; margin:18px 0 0}
+
+.diary-login__aside{
+  background:var(--wine-tint); border-radius:var(--radius);
+  padding:22px 24px; align-self:start;
+}
+.diary-login__aside h2{
+  font:700 16px/1.3 Georgia,serif; color:var(--wine-dark); margin:0 0 10px;
+}
+.diary-login__aside p{font-size:14px; line-height:1.65; color:var(--ink-2)}
+.diary-login__privacy{
+  margin:14px 0 0; padding-top:12px; border-top:1px solid var(--line-wine);
+  font-size:13px; color:var(--wine-dark);
+}
+
+/* ------------------------------------------------------------------ tables */
+
+.diary-table td,.diary-table th{vertical-align:top}
+.diary-td-date{white-space:nowrap; line-height:1.35}
+.diary-td-date span{display:block; font-weight:400; font-size:12px; color:var(--ink-3)}
+
+.diary-title{font-weight:700; color:var(--wine-dark); text-decoration:none}
+.diary-title:hover{color:var(--wine); text-decoration:underline}
+.diary-excerpt{
+  margin:3px 0 0; font-size:13px; color:var(--ink-3); line-height:1.55; max-width:60ch;
+}
+.diary-clip{
+  display:inline-block; margin-top:4px; font-size:12px; color:var(--ink-3);
+}
+.diary-td-meta{line-height:1.4}
+.diary-td-meta b{display:block; font-size:13.5px}
+.diary-td-meta span{display:block; font-size:12.5px; color:var(--ink-3)}
+.diary-td-do{white-space:nowrap; font-size:13.5px}
+.diary-td-do a{color:var(--wine); text-decoration:none; font-weight:600}
+.diary-td-do a:hover{text-decoration:underline}
+
+.dtable tbody tr.is-off td,.dtable tbody tr.is-off th{opacity:.55}
+.dtable tbody th small{display:block; font-weight:400; font-size:12px; color:var(--ink-3)}
+.diary-never{color:var(--ink-3); font-style:italic}
+
+.diary-inline-form{display:inline}
+.diary-inline-form button,
+.diary-detach button{
+  border:0; background:none; padding:0; margin-left:10px; cursor:pointer;
+  font:inherit; font-size:13.5px; font-weight:600; color:#b3261e; text-decoration:underline;
+}
+
+/* The category chip. One class, one custom property for the colour, so PHP
+   passes a value rather than the stylesheet carrying thirteen near-identical
+   rules that go stale the moment a category is added. */
+.diary-tag{
+  display:inline-block; padding:3px 9px; border-radius:999px;
+  font-size:12px; font-weight:700; line-height:1.5; white-space:nowrap;
+  color:#fff; background:var(--tag,var(--wine));
+}
+.diary-tag--sm{font-size:11px; padding:2px 7px}
+
+/* ------------------------------------------------------------------ pager */
+
+.diary-pager{
+  display:flex; gap:6px; align-items:center; flex-wrap:wrap;
+  justify-content:center; margin:var(--gap-2) 0 0;
+}
+.diary-pager a,.diary-pager span{
+  min-width:40px; min-height:40px; padding:0 12px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); border-radius:6px;
+  text-decoration:none; color:var(--ink-2); font-size:14px; font-weight:600;
+}
+.diary-pager a:hover{background:var(--wine-tint); color:var(--wine); border-color:var(--line-wine)}
+.diary-pager .is-current{background:var(--wine); color:#fff; border-color:var(--wine)}
+.diary-pager__gap{border:0; min-width:20px; color:var(--ink-3)}
+
+/* ------------------------------------------------------------- empty state */
+
+.diary-empty{
+  background:var(--surface); border:1px dashed var(--line-wine);
+  border-radius:var(--radius); padding:44px 28px; text-align:center;
+}
+.diary-empty h2{font:700 19px/1.3 Georgia,serif; color:var(--wine-dark); margin:0 0 8px}
+.diary-empty p{color:var(--ink-3); max-width:56ch; margin-inline:auto}
+
+/* -------------------------------------------------------- reading an entry */
+
+.diary-view{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:26px 28px; box-shadow:var(--shadow);
+}
+.diary-view__head{margin:0 0 16px}
+.diary-view__head h2{
+  font:700 clamp(19px,2.1vw,24px)/1.3 Georgia,serif; color:var(--wine-dark);
+  margin:10px 0 0;
+}
+.diary-meta{
+  display:grid; gap:12px 24px; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  margin:0 0 20px; padding:16px 0; border-block:1px solid var(--line);
+}
+.diary-meta dt{
+  font-size:11.5px; font-weight:700; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 2px;
+}
+.diary-meta dd{margin:0; font-size:15px; color:var(--ink)}
+
+.diary-body{font-size:15.5px; line-height:1.75; color:var(--ink); max-width:74ch}
+.diary-stamp{margin:20px 0 0; font-size:12.5px; color:var(--ink-3)}
+
+.diary-files{margin:22px 0 0}
+.diary-files h2,.diary-files h3{
+  font:700 13px/1 inherit; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--wine); margin:0 0 8px;
+}
+.diary-files ul{list-style:none; margin:0; padding:0}
+.diary-files li{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:9px 12px; border:1px solid var(--line); border-radius:6px; margin:0 0 6px;
+  background:var(--surface-2); font-size:14px;
+}
+.diary-files li > span{color:var(--ink-3); font-size:12.5px}
+
+/* --------------------------------------------------------------- calendar */
+
+.diary-monthbar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  flex-wrap:wrap; margin:0 0 var(--gap-2);
+}
+.diary-monthbar h2{
+  margin:0; font:700 clamp(19px,2.2vw,25px)/1.2 Georgia,serif; color:var(--wine-dark);
+}
+
+.cal{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+}
+.cal__head{
+  display:grid; grid-template-columns:repeat(7,1fr);
+  background:var(--wine); color:#fff;
+}
+.cal__head span{
+  padding:9px 6px; text-align:center; font-size:12px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.cal__grid{display:grid; grid-template-columns:repeat(7,1fr)}
+.cal__pad{background:var(--surface-2); min-height:92px; border:1px solid var(--line); margin:-.5px}
+
+.cal__day{
+  position:relative; display:flex; flex-direction:column; gap:2px;
+  min-height:92px; padding:8px 9px; margin:-.5px;
+  border:1px solid var(--line); text-decoration:none; color:var(--ink-3);
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.cal__day b{font-size:14px; font-weight:700; color:var(--ink-2)}
+.cal__day:hover{background:var(--wine-tint); z-index:2; box-shadow:inset 0 0 0 2px var(--line-wine)}
+.cal__day.is-weekend{background:var(--surface-2)}
+.cal__day.is-weekend:hover{background:var(--wine-tint)}
+
+.cal__day.has-entries{background:var(--wine-tint)}
+.cal__day.has-entries b{color:var(--wine-dark)}
+.cal__n{font-size:12px; font-weight:700; color:var(--wine)}
+.cal__h{font-size:11.5px; color:var(--ink-3)}
+
+/* Today is outlined rather than filled, so it can be read at the same time as
+   "this day has entries" — two different facts that must not compete for the
+   same background. */
+.cal__day.is-today{box-shadow:inset 0 0 0 2px var(--wine); z-index:1}
+
+.cal__add{
+  position:absolute; right:9px; bottom:7px; font-size:18px; line-height:1;
+  color:var(--line-wine); opacity:0; transition:opacity .15s ease;
+}
+.cal__day:hover .cal__add{opacity:1}
+
+.diary-monthlist{list-style:none; margin:0; padding:0}
+.diary-monthlist li{
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  padding:10px 0; border-bottom:1px solid var(--line); font-size:14.5px;
+}
+.diary-monthlist li:last-child{border-bottom:0}
+.diary-monthlist__d{
+  flex:0 0 62px; font-weight:700; color:var(--wine-dark); font-size:13px;
+}
+.diary-monthlist a{flex:1 1 240px; color:var(--ink); text-decoration:none; font-weight:600}
+.diary-monthlist a:hover{color:var(--wine); text-decoration:underline}
+.diary-monthlist__h{color:var(--ink-3); font-size:13px; font-variant-numeric:tabular-nums}
+
+/* ---------------------------------------------------------------- charts */
+
+.chart{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:16px 18px 10px; margin:0 0 var(--gap);
+}
+.chart__svg{width:100%; height:auto; display:block}
+.chart__rule{stroke:var(--line); stroke-width:1}
+.chart__axis,.chart__tick{
+  font:400 11px/1 "Segoe UI",system-ui,sans-serif; fill:var(--ink-3);
+}
+.chart__bar--h{fill:var(--wine)}
+.chart__bar--n{fill:var(--line-wine)}
+
+.chart__key{
+  display:flex; gap:18px; align-items:center; justify-content:flex-end;
+  margin:6px 0 0; font-size:12.5px; color:var(--ink-3);
+}
+.chart__swatch{
+  display:inline-block; width:12px; height:12px; border-radius:3px;
+  margin-right:5px; vertical-align:-1px;
+}
+.chart__swatch--h{background:var(--wine)}
+.chart__swatch--n{background:var(--line-wine)}
+
+/* Horizontal bars — label, bar, figure. Lengths on a shared baseline, which
+   is the comparison people read accurately. */
+.hbars{list-style:none; margin:0; padding:0}
+.hbar{
+  display:grid; gap:6px 14px; align-items:center; padding:7px 0;
+  grid-template-columns:minmax(120px,190px) 1fr minmax(96px,auto);
+}
+.hbar__label{font-size:14px; color:var(--ink-2); font-weight:600}
+.hbar__track{
+  background:var(--surface-2); border-radius:4px; height:20px;
+  border:1px solid var(--line); overflow:hidden;
+}
+.hbar__fill{
+  display:block; height:100%; background:var(--tag,var(--wine)); border-radius:3px;
+  animation:hbarIn .5s cubic-bezier(.2,.8,.2,1) both;
+  transform-origin:left center;
+}
+@keyframes hbarIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hbar__value{
+  font-size:13.5px; font-weight:700; color:var(--wine-dark);
+  font-variant-numeric:tabular-nums; text-align:right;
+}
+.hbar__value em{
+  display:block; font-style:normal; font-weight:400; font-size:12px; color:var(--ink-3);
+}
+
+@media (max-width:640px){
+  .hbar{grid-template-columns:1fr auto}
+  .hbar__track{grid-column:1 / -1}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hbar__fill{animation:none}
+  .cal__day,.diary-tabs a{transition:none}
+}
+
+/* ------------------------------------------------------------------ print
+   The diary screens are not the printable report — pages/diary/print.php is.
+   If somebody prints one anyway, at least give them the content without the
+   controls. */
+@media print{
+  .diary-tabs,.diary-filters,.diary-actions,.diary-pager,.diary-flash{display:none !important}
+  .diary-form,.diary-view,.chart,.cal{border:1px solid #ccc; box-shadow:none}
+}
+
+/* =============================================================================
+   Hierarchy, approvals and messages
+   =============================================================================
+   Added with the reporting structure and the message system. Same rule as the
+   rest of this file: no new colours. Statuses reuse the wine family plus the
+   one red already defined for errors, because a fifth hue on a page that
+   already carries thirteen category colours would be one signal too many.
+   ========================================================================== */
+
+/* ------------------------------------------------------------- the badges
+   .nav__acct-badge is in css/base.css with the rest of the navigation, for the
+   reason given at the top of this file. This is the one used inside the diary
+   itself — on the tab strip and in the account dropdown's own menu items. */
+
+.diary-badge{
+  display:inline-block; min-width:18px; padding:1px 6px; margin-left:6px;
+  border-radius:999px; background:#b3261e; color:#fff;
+  font-size:11px; font-weight:700; line-height:1.5; text-align:center;
+  vertical-align:1px;
+}
+.nav__acct-out button .diary-badge{margin-left:8px}
+
+/* --------------------------------------------------------- entry statuses */
+
+.diary-state{
+  display:inline-block; padding:2px 9px; border-radius:4px;
+  font-size:11.5px; font-weight:700; letter-spacing:.02em;
+  border:1px solid; white-space:nowrap; line-height:1.6;
+}
+/* Draft is the quietest: it is the normal resting state and does not need to
+   shout. Returned is the only one that does. */
+.diary-state--draft    {background:var(--surface-2); border-color:var(--line);      color:var(--ink-3)}
+.diary-state--submitted{background:#fff6e0;          border-color:#e3c07a;          color:#7a5a12}
+.diary-state--approved {background:var(--wine-tint); border-color:var(--line-wine); color:var(--wine-dark)}
+.diary-state--returned {background:#fdeaea;          border-color:#e6a9a5;          color:#7f1d1a}
+
+.diary-meta__sub{display:block; font-size:12px; color:var(--ink-3)}
+.diary-stale{color:#b3261e; font-weight:600}
+
+/* -------------------------------------------------------- review & remarks */
+
+.diary-review{
+  margin:var(--gap-2) 0 0; padding:20px 22px;
+  background:var(--wine-tint); border:1px solid var(--line-wine);
+  border-radius:var(--radius);
+}
+.diary-review h3{
+  margin:0 0 4px; font:700 15px/1.3 Georgia,serif; color:var(--wine-dark);
+}
+.diary-review p{font-size:13.5px; color:var(--ink-2); margin:0 0 14px}
+.diary-review .diary-actions{border-top:0; padding-top:0; margin-top:14px}
+
+.diary-remarks{margin:var(--gap-2) 0 0}
+.remark-list{list-style:none; margin:0 0 var(--gap-2); padding:0}
+.remark{
+  background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--line-wine); border-radius:0 var(--radius) var(--radius) 0;
+  padding:13px 16px; margin:0 0 8px;
+}
+.remark header{
+  display:flex; gap:9px; align-items:baseline; flex-wrap:wrap;
+  margin:0 0 5px; font-size:12.5px; color:var(--ink-3);
+}
+.remark header strong{color:var(--wine-dark); font-size:13.5px}
+.remark header em{font-style:normal; font-weight:600; color:var(--wine)}
+.remark header time{margin-left:auto}
+.remark > div{font-size:14.5px; line-height:1.65}
+/* The two the workflow wrote itself, so a decision reads differently from an
+   ordinary comment without needing to be labelled twice. */
+.remark--approved{border-left-color:var(--wine)}
+.remark--returned{border-left-color:#b3261e}
+
+/* ----------------------------------------------------------- approvals page */
+
+.appr-group{margin:0 0 var(--gap-2)}
+.appr-group__head{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  flex-wrap:wrap; padding:0 0 8px; border-bottom:2px solid var(--line-wine); margin:0 0 12px;
+}
+.appr-group__head h3{
+  margin:0; font:700 16px/1.3 Georgia,serif; color:var(--wine-dark);
+}
+.appr-group__head h3 span{
+  font:400 12.5px/1 inherit; color:var(--ink-3); margin-left:8px;
+}
+
+.appr-card{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:16px 18px; margin:0 0 10px;
+}
+.appr-card__head{
+  display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+  flex-wrap:wrap; margin:0 0 8px;
+}
+.appr-card__head strong,.appr-card__head .diary-title{display:block; font-size:15px}
+.appr-card__head span{display:block; font-size:12.5px; color:var(--ink-3)}
+.appr-card__period{
+  font-weight:700; color:var(--wine-dark); font-size:14px; white-space:nowrap;
+}
+.appr-card__body{
+  font-size:14px; line-height:1.65; color:var(--ink-2); margin:0 0 10px; max-width:78ch;
+}
+.appr-card__meta{font-size:12.5px; color:var(--ink-3); margin:0 0 10px}
+.appr-card__note{
+  margin:0 0 10px; padding:8px 14px; border-left:3px solid var(--line-wine);
+  font-size:13.5px; color:var(--ink-2); background:var(--surface-2);
+}
+.appr-card__links{display:flex; gap:16px; font-size:13.5px; margin:0 0 12px}
+.appr-card__do{
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+  padding-top:12px; border-top:1px solid var(--line);
+}
+.appr-card__do input[type="text"]{
+  flex:1 1 240px; min-height:40px; padding:8px 12px; font:inherit; font-size:14px;
+  border:1px solid var(--line); border-radius:6px;
+}
+
+/* --------------------------------------------------------- monthly reports */
+
+.rep-grid{display:grid; gap:var(--gap); grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.rep-card{
+  background:var(--surface); border:1px solid var(--line);
+  border-top:4px solid var(--wine); border-radius:var(--radius); padding:18px 20px;
+}
+.rep-card.is-done{border-top-color:var(--line-wine); background:var(--surface-2)}
+.rep-card h3{margin:0 0 6px; font:700 17px/1.2 Georgia,serif; color:var(--wine-dark)}
+.rep-card__figs{font-size:13.5px; color:var(--ink-3); margin:0 0 10px}
+.rep-card__figs b{color:var(--ink); font-size:15px}
+.rep-card__state{
+  font-size:12.5px; font-weight:700; margin:0 0 10px; color:var(--ink-3);
+}
+.rep-card__state span{display:block; font-weight:400; font-size:12px}
+.rep-card__state--submitted{color:#7a5a12}
+.rep-card__state--countersigned{color:var(--wine)}
+.rep-card__state--returned{color:#b3261e}
+.rep-card__note{
+  margin:0 0 10px; padding:8px 12px; background:#fdeaea;
+  border-left:3px solid #b3261e; font-size:13px; color:#7f1d1a;
+}
+.rep-card__links{display:flex; gap:14px; font-size:13px; margin:0 0 12px}
+.rep-card__closed{font-size:12.5px; color:var(--ink-3); margin:0}
+.rep-card form{display:flex; flex-direction:column; gap:8px}
+.rep-card form input[type="text"]{
+  min-height:40px; padding:8px 11px; font:inherit; font-size:13.5px;
+  border:1px solid var(--line); border-radius:6px; width:100%;
+}
+
+/* --------------------------------------------------------------- org chart */
+
+.org-table th[scope="row"]{white-space:normal}
+.org-rule{color:var(--line-wine); margin-right:5px; font-size:13px}
+.org-you{
+  display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px;
+  background:var(--wine); color:#fff; font-size:10.5px; font-weight:700;
+}
+.org-edit summary{
+  cursor:pointer; color:var(--wine); font-weight:600; font-size:13.5px;
+}
+.org-edit[open] summary{margin-bottom:10px}
+.org-edit form{
+  display:flex; flex-direction:column; gap:6px; min-width:250px;
+  padding:12px; background:var(--surface-2); border:1px solid var(--line);
+  border-radius:6px;
+}
+.org-edit label{
+  font-size:11.5px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.03em; color:var(--ink-3);
+}
+.org-edit select{
+  font:inherit; font-size:14px; padding:8px 10px; min-height:40px;
+  border:1px solid var(--line); border-radius:6px; background:var(--surface);
+}
+.org-check,.diary-check{
+  display:flex; align-items:center; gap:8px; text-transform:none;
+  font-size:13.5px; font-weight:400; letter-spacing:0; color:var(--ink-2);
+}
+.org-check input,.diary-check input{width:auto; min-height:0}
+
+/* ---------------------------------------------------------------- messages */
+
+.msg-layout{display:grid; gap:var(--gap-2); grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+@media (max-width:900px){ .msg-layout{grid-template-columns:1fr} }
+
+.msg-boxes{display:flex; gap:4px; border-bottom:2px solid var(--line-wine); margin:0 0 var(--gap)}
+.msg-boxes a{
+  padding:10px 18px; text-decoration:none; color:var(--ink-2); font-weight:600;
+  font-size:14.5px; border-bottom:3px solid transparent; margin-bottom:-2px;
+}
+.msg-boxes a:hover{color:var(--wine)}
+.msg-boxes a.is-on{color:var(--wine-dark); border-bottom-color:var(--wine)}
+
+.msg-threads{list-style:none; margin:0; padding:0}
+.msg-thread{border-bottom:1px solid var(--line)}
+.msg-thread:last-child{border-bottom:0}
+.msg-thread a{
+  display:block; padding:13px 14px; text-decoration:none; color:inherit;
+  border-left:3px solid transparent;
+}
+.msg-thread a:hover{background:var(--wine-tint); border-left-color:var(--wine)}
+.msg-thread__top{display:flex; justify-content:space-between; gap:12px; align-items:baseline}
+.msg-thread__who{font-size:13.5px; color:var(--ink-2); font-weight:600}
+.msg-thread__when{font-size:12px; color:var(--ink-3); white-space:nowrap}
+.msg-thread__subject{
+  display:block; margin:3px 0 2px; font-size:15px; color:var(--wine-dark); font-weight:600;
+}
+.msg-thread__count{
+  display:inline-block; margin-left:6px; padding:0 6px; border-radius:999px;
+  background:var(--surface-2); border:1px solid var(--line);
+  font-size:11px; font-weight:700; color:var(--ink-3);
+}
+.msg-thread__peek{display:block; font-size:13px; color:var(--ink-3); line-height:1.5}
+.msg-thread.is-unread a{background:var(--wine-tint)}
+.msg-thread.is-unread .msg-thread__who,
+.msg-thread.is-unread .msg-thread__subject{font-weight:800; color:var(--wine-dark)}
+
+.msg-tag{
+  display:inline-block; margin-right:6px; padding:1px 7px; border-radius:3px;
+  background:var(--wine); color:#fff; font-size:10.5px; font-weight:700;
+  letter-spacing:.03em; text-transform:uppercase; vertical-align:1px;
+}
+
+.msg-compose .dsection__h{margin-top:0}
+.msg-kind{display:flex; gap:18px; margin:0 0 14px; font-size:14px}
+.msg-kind label{display:flex; align-items:center; gap:7px; cursor:pointer}
+.msg-kind input{width:auto; min-height:0}
+
+.msg-back{font-size:13.5px; margin:0 0 var(--gap)}
+.msg-linked{
+  font-size:13.5px; padding:10px 14px; background:var(--surface-2);
+  border-left:3px solid var(--wine); border-radius:0 6px 6px 0; margin:0 0 var(--gap);
+}
+.msg-circular-note{margin-bottom:var(--gap-2)}
+
+.msg-stream{list-style:none; margin:0 0 var(--gap-2); padding:0}
+.msg-bubble{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); padding:15px 18px; margin:0 0 10px;
+  max-width:90%;
+}
+/* Your own messages sit to the right and tinted, which is the one convention
+   everybody already reads without being taught it. */
+.msg-bubble.is-mine{margin-left:auto; background:var(--wine-tint); border-color:var(--line-wine)}
+.msg-bubble header{
+  display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;
+  font-size:12.5px; color:var(--ink-3); margin:0 0 6px;
+}
+.msg-bubble header strong{color:var(--wine-dark); font-size:14px}
+.msg-bubble__grade{font-size:12px}
+.msg-bubble header time{margin-left:auto}
+.msg-bubble__subject{
+  margin:0 0 8px; font:700 16px/1.3 Georgia,serif; color:var(--wine-dark);
+}
+.msg-bubble__body{font-size:14.5px; line-height:1.7}
+.msg-reply{margin:0}
+
+@media (max-width:640px){
+  .msg-bubble{max-width:100%}
+  .appr-card__do{flex-direction:column; align-items:stretch}
+  .appr-card__do input[type="text"]{flex:1 1 auto}
+}
+
+@media print{
+  .diary-review,.diary-remarks form,.msg-compose,.org-edit{display:none !important}
+}
+
+/* =============================================================================
+   Attachments on messages, and the in-site viewer
+   ========================================================================== */
+
+.msg-thread__clip{
+  display:inline-block; margin-left:6px; font-size:11.5px; color:var(--ink-3);
+}
+
+.msg-files{list-style:none; margin:10px 0 0; padding:10px 0 0; border-top:1px solid var(--line)}
+.msg-bubble.is-mine .msg-files{border-top-color:var(--line-wine)}
+.msg-files li{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:6px 0; font-size:13.5px;
+}
+.msg-files__icon{font-size:15px; line-height:1}
+.msg-files__name{
+  font-weight:600; color:var(--ink); max-width:34ch;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.msg-files__size{font-size:12px; color:var(--ink-3)}
+.msg-files a{font-size:13px; font-weight:600; color:var(--wine); text-decoration:none}
+.msg-files a:hover{text-decoration:underline}
+
+/* ------------------------------------------------------------- the viewer */
+
+.fileview{
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+}
+.fileview__head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  flex-wrap:wrap; padding:18px 22px; border-bottom:1px solid var(--line);
+  background:var(--surface-2);
+}
+.fileview__head h2{
+  margin:0; font:700 17px/1.3 Georgia,serif; color:var(--wine-dark);
+  word-break:break-word;
+}
+.fileview__head p{margin:4px 0 0; font-size:12.5px; color:var(--ink-3)}
+.fileview__do{display:flex; gap:8px; flex-wrap:wrap; flex:0 0 auto}
+
+/* A dark stage, so a scanned page or a photograph is looked at rather than
+   blended into the page around it. */
+.fileview__stage{background:#2b2429; padding:18px; text-align:center}
+.fileview__stage--image img{
+  max-width:100%; height:auto; border-radius:4px;
+  box-shadow:0 6px 24px rgba(0,0,0,.35);
+}
+.fileview__stage object{display:block; border:0; background:#fff; border-radius:4px}
+.fileview__stage--none{
+  background:var(--surface); color:var(--ink-2); text-align:left;
+  padding:28px 24px; font-size:14.5px; line-height:1.7;
+}
+.fileview__stage--none p{max-width:70ch}
+.fileview__fallback{color:#f3dbe6; padding:40px 20px; font-size:14.5px}
+.fileview__fallback a{color:#fff}
+
+/* --------------------------------------------------- division cards on org */
+
+.dcard--headless{border-left-color:#b3261e}
+.org-divhead{font-size:13.5px; color:var(--ink-2); margin:6px 0 0}
+.org-divhead strong{color:var(--wine-dark)}
+.dcard--headless .org-divhead strong{color:#b3261e}
+.org-divsections{font-size:12px; color:var(--ink-3); margin:6px 0 0}
+
+@media print{ .fileview__do{display:none !important} }
+
+/* ------------------------------------------------- issuing a password */
+
+.diary-pw{
+  background:var(--wine-tint); border:1px solid var(--line-wine);
+  border-radius:var(--radius); padding:18px 20px; margin:0 0 var(--gap-2);
+}
+.diary-pw h3{margin:0 0 4px; font:700 15px/1.3 Georgia,serif; color:var(--wine-dark)}
+.diary-pw .diary-hint{margin:0 0 14px}
+.diary-pw__row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.diary-pw__row form{display:flex; gap:8px; align-items:center; margin:0}
+.diary-pw__row input[type="text"]{
+  min-height:42px; padding:9px 12px; font:inherit; font-size:14px;
+  border:1px solid var(--line); border-radius:6px; min-width:230px; background:var(--surface);
+}
+.diary-pw__or{font-size:13px; color:var(--ink-3)}
+
+/* A password in a flash message is meant to be copied off the screen, so it is
+   set in a monospaced face where l, 1 and I cannot be confused. */
+.diary-flash--ok strong,
+.diary-flash code{font-family:'Courier New',monospace}
+
+/* =============================================================================
+   Saying who can see what, and who a message is going to
+   ========================================================================== */
+
+.diary-scope-note{margin-bottom:var(--gap-2)}
+
+.diary-privacy{
+  font-size:13.5px; line-height:1.65; color:var(--ink-2);
+  background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--wine); border-radius:0 var(--radius) var(--radius) 0;
+  padding:12px 16px; margin:0 0 var(--gap-2); max-width:80ch;
+}
+.diary-privacy strong{color:var(--wine-dark)}
+
+.msg-rule{
+  font-size:13.5px; line-height:1.65; color:var(--ink-2);
+  background:var(--wine-tint); border-radius:var(--radius);
+  padding:11px 15px; margin:0 0 var(--gap);
+}
+.msg-rule strong{color:var(--wine-dark)}
+
+/* The two kinds of message, as cards rather than bare radio buttons — the
+   difference between "to a person" and "a circular to eighty people" deserves
+   more than a 13px label beside a dot. */
+.msg-kind{display:grid; gap:10px; grid-template-columns:1fr 1fr; margin:0 0 16px}
+@media (max-width:560px){ .msg-kind{grid-template-columns:1fr} }
+.msg-kind label{
+  display:flex; align-items:flex-start; gap:9px; cursor:pointer;
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:11px 13px; background:var(--surface);
+  transition:border-color .15s ease, background .15s ease;
+}
+.msg-kind label:hover{border-color:var(--line-wine); background:var(--wine-tint)}
+.msg-kind input{width:auto; min-height:0; margin-top:3px; flex:0 0 auto}
+.msg-kind label:has(input:checked){border-color:var(--wine); background:var(--wine-tint)}
+.msg-kind span{display:block; line-height:1.4}
+.msg-kind strong{display:block; font-size:14px; color:var(--wine-dark)}
+.msg-kind em{display:block; font-style:normal; font-size:12px; color:var(--ink-3); margin-top:1px}
+
+.msg-quick{display:flex; gap:8px; flex-wrap:wrap}
+.msg-quick__btn{
+  border:1px solid var(--line-wine); background:var(--surface);
+  color:var(--wine); border-radius:999px; padding:7px 15px; min-height:38px;
+  font:600 13px/1 inherit; cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.msg-quick__btn:hover{background:var(--wine-tint)}
+.msg-quick__btn.is-picked{background:var(--wine); color:#fff; border-color:var(--wine)}
+
+/* =============================================================================
+   Office forms in the portal
+   =============================================================================
+   The shelf of blank forms, the list of what somebody has filled in, and the
+   bar of actions around a form being filled or approved. The SHEET itself is
+   not styled here — that is css/sections/forms.css, shared with the printable
+   blank copies, and pulled in on this page by css/pages/diary-form.css.
+   ========================================================================== */
+
+/* ------------------------------------------------------------- the shelf */
+
+.formshelf__h{
+  font:700 15px/1.3 Georgia,serif; color:var(--wine-dark);
+  margin:22px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--line);
+}
+.formshelf{
+  list-style:none; margin:0 0 6px; padding:0;
+  display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(268px,1fr));
+}
+.formcard{
+  border:1px solid var(--line); border-radius:var(--radius); padding:13px 15px;
+  background:var(--surface); display:flex; flex-direction:column; gap:5px;
+}
+.formcard:hover{ border-color:var(--wine); box-shadow:0 3px 14px rgba(0,0,0,.07); }
+.formcard__go{
+  font:700 14.5px/1.35 Georgia,serif; color:var(--wine-dark); text-decoration:none;
+}
+.formcard__go:hover{ text-decoration:underline; }
+.formcard__note{ margin:0; font-size:12.5px; line-height:1.5; color:var(--ink-2); }
+.formcard__do{ margin:auto 0 0; padding-top:8px; font-size:12.5px; color:var(--ink-2); }
+.formcard__do a{ color:var(--wine); }
+.formcard__do span{ margin:0 5px; opacity:.5; }
+
+/* --------------------------------------------------------- what stage it is at
+
+   Five stages, five colours, and the same colour wherever the stage is named —
+   in the list, on the form, in the approver's queue. Somebody scanning a
+   column of thirty forms is reading the colour, not the words.            */
+
+.fstatus{
+  display:inline-block; padding:2px 9px; border-radius:20px; white-space:nowrap;
+  font:700 11.5px/1.7 'Segoe UI',system-ui,sans-serif; letter-spacing:.2px;
+}
+.fstatus--draft        { background:#eceff3; color:#4a5563; }
+.fstatus--submitted    { background:#fdf1d8; color:#7a5405; }
+.fstatus--with_director{ background:#e5eefb; color:#1d4f91; }
+.fstatus--approved     { background:#e2f3e6; color:#1d6b34; }
+.fstatus--returned     { background:#fbe6e3; color:#9a2f22; }
+
+.formlist td:first-child{ font-weight:600; }
+.formlist .num{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; white-space:nowrap; }
+
+/* -------------------------------------------------- the bar over a form */
+
+.formbar{
+  display:flex; flex-wrap:wrap; gap:14px; align-items:flex-start;
+  justify-content:space-between; padding:0 0 14px; border-bottom:1px solid var(--line);
+  margin-bottom:16px;
+}
+.formbar__who h2{ margin:0 0 5px; font:700 clamp(18px,2vw,23px)/1.25 Georgia,serif; color:var(--wine-dark); }
+.formbar__who p{ margin:0; font-size:13px; color:var(--ink-2); }
+.formbar__ref{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; }
+.formbar__do{ display:flex; gap:8px; flex-wrap:wrap; }
+
+.formhint{
+  margin:0 0 14px; padding:11px 14px; border-radius:var(--radius);
+  background:var(--surface-2); border:1px solid var(--line);
+  font-size:13.5px; line-height:1.6; color:var(--ink-2);
+}
+.formnote{ margin:0 0 16px; padding:13px 16px; border-radius:var(--radius); border:1px solid; }
+.formnote h3{ margin:0 0 5px; font:700 15px/1.3 Georgia,serif; }
+.formnote p{ margin:0 0 4px; font-size:13.5px; line-height:1.6; }
+.formnote__do{ margin-top:9px; }
+.formnote--bad{ background:#fbe6e3; border-color:#e7b6ae; color:#7a2418; }
+.formnote--ok { background:#e2f3e6; border-color:#a9d5b5; color:#1d6b34; }
+
+/* ------------------------------------------------- the sheet, and under it */
+
+.formsheet{ margin:0 0 24px; }
+.formsheet .sheet{ margin-top:0; }
+
+.formactions{
+  max-width:210mm; margin:0 auto; padding:16px 18px; border:1px solid var(--line);
+  border-radius:var(--radius); background:var(--surface-2);
+}
+.formactions label{ display:block; font-weight:700; font-size:13.5px; margin-bottom:6px; }
+.formactions label span{ font-weight:400; color:var(--ink-2); }
+.formactions textarea{
+  width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:var(--radius);
+  font:inherit; font-size:14px; background:#fff; resize:vertical;
+}
+.formactions__row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:12px; }
+.formactions--decide{ border-color:#c9a227; background:#fdf9ee; }
+
+/* ------------------------------------------------------------- the trail */
+
+.ftrail{ list-style:none; margin:0; padding:0; }
+.ftrail__step{
+  position:relative; padding:0 0 16px 20px; border-left:2px solid var(--line);
+  margin-left:5px; font-size:13.5px; line-height:1.6;
+}
+.ftrail__step:last-child{ border-left-color:transparent; padding-bottom:0; }
+.ftrail__step::before{
+  content:""; position:absolute; left:-6px; top:5px; width:10px; height:10px;
+  border-radius:50%; background:var(--line);
+}
+.ftrail__step--submitted::before{ background:#c9a227; }
+.ftrail__step--approved::before { background:#2f8f4e; }
+.ftrail__step--returned::before { background:#c0392b; }
+.ftrail__when{ color:var(--ink-2); font-size:12.5px; }
+.ftrail__note{
+  margin:5px 0 0; padding:8px 11px; background:var(--surface-2);
+  border-radius:var(--radius); color:var(--ink-2);
+}
+
+@media (max-width:640px){
+  .formactions{ padding:13px 12px; }
+  .formbar__do{ width:100%; }
+}
+
+/* =============================================================================
+   Security
+   =============================================================================
+   The Director's and the administrator's window on who has been in the system.
+   Deliberately plain: a security screen that looks like a dashboard invites
+   somebody to admire it rather than read it.
+   ========================================================================== */
+
+.seclist{ list-style:none; margin:0 0 18px; padding:0; display:grid; gap:9px; }
+.seccheck{
+  display:grid; grid-template-columns:minmax(190px,240px) 1fr; gap:4px 18px;
+  padding:12px 14px 12px 16px; border:1px solid var(--line); border-left-width:4px;
+  border-radius:var(--radius); background:var(--surface); font-size:13.5px; line-height:1.6;
+}
+.seccheck strong{ font:700 13.5px/1.5 'Segoe UI',system-ui,sans-serif; color:var(--ink); }
+.seccheck span{ color:var(--ink-2); }
+.seccheck--ok  { border-left-color:#2f8f4e; }
+.seccheck--bad { border-left-color:#c0392b; background:#fdf3f2; }
+.seccheck--bad strong{ color:#8f2317; }
+.seccheck--bad span{ color:#7a2418; }
+
+.secbackup{
+  display:flex; flex-wrap:wrap; gap:14px; align-items:flex-start;
+  padding:14px 16px; border:1px solid var(--line); border-radius:var(--radius);
+  background:var(--surface-2);
+}
+.secbackup form{ margin:0; }
+.secbackup p{ flex:1 1 340px; margin:0; font-size:13px; line-height:1.65; color:var(--ink-2); }
+.secbackup code{ font-size:12px; background:#fff; padding:1px 5px; border-radius:3px; border:1px solid var(--line); }
+
+.secfilter{ display:flex; flex-wrap:wrap; gap:6px; margin:0 0 12px; }
+
+.dtable--tight td{ padding-top:6px; padding-bottom:6px; font-size:13px; }
+.nowrap{ white-space:nowrap; }
+.num--warn{ color:#c0392b; font-weight:700; }
+.secdetail span{ display:block; color:var(--ink-2); font-size:12px; }
+
+.secplain{
+  max-width:74ch; margin:0 0 12px; font-size:14px; line-height:1.75; color:var(--ink-2);
+}
+
+@media (max-width:700px){
+  .seccheck{ grid-template-columns:1fr; }
+}
+
+/* The line printed across anything taken out of the system on paper. It is
+   invisible on screen inside the portal and appears on the printed sheet. */
+.watermark{ color:#8a8a8a; }
