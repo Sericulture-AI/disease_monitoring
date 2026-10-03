@@ -67,10 +67,10 @@ Then go to **E-mail Check** (admins only) and send a test. Until this is filled 
 
 ## GitHub
 
-The code goes to the private repository **Sericulture-AI/disease-monitoring**. Records, PDFs and photos (`storage/`) and passwords (`config.local.php`) are never uploaded.
+The code goes to the private repository **Sericulture-AI/disease_monitoring**. Records, PDFs and photos (`storage/`) and passwords (`config.local.php`) are never uploaded.
 
 **First time**
-1. Create an **empty private** repo at https://github.com/new. Set Owner to `Sericulture-AI` and Name to `disease-monitoring`, and do not add a README.
+1. Create an **empty private** repo at https://github.com/new. Set Owner to `Sericulture-AI` and Name to `disease_monitoring`, and do not add a README.
 2. Install Git for Windows if it isn't already installed: https://git-scm.com/download/win
 3. Double-click `push-to-github.bat`. Sign in to GitHub in the browser window the first time it asks.
 
@@ -79,5 +79,5 @@ The code goes to the private repository **Sericulture-AI/disease-monitoring**. R
 **Passwords:** copy `config.local.example.php` to `config.local.php` and put the SMTP details there, not in `config.php`.
 
 **Installing on another server:**
-1. Run `git clone https://github.com/Sericulture-AI/disease-monitoring.git` inside `htdocs`, beside `cmerti-site`.
+1. Run `git clone https://github.com/Sericulture-AI/disease_monitoring.git` inside `htdocs`, beside `cmerti-site`.
 2. Create `config.local.php` there.
