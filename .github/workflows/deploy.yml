@@ -1,0 +1,92 @@
+# Deploys Disease Monitoring to the free PHP + MySQL host (InfinityFree or any
+# FTP host) on every push to main. Passwords live in GitHub → Settings →
+# Secrets and variables → Actions, never in the code.
+#
+# Secrets used (add them once):
+#   FTP_SERVER     e.g. ftpupload.net
+#   FTP_USERNAME   e.g. if0_12345678
+#   FTP_PASSWORD   the hosting account / FTP password
+#   FTP_DIR        e.g. /htdocs/           (folder the site is served from; must end with /)
+#   DB_HOST        e.g. sql123.infinityfree.com
+#   DB_NAME        e.g. if0_12345678_dm
+#   DB_USER        e.g. if0_12345678
+#   DB_PASS        the MySQL password from the hosting panel
+#   MAIL_FROM      Gmail address that sends the reports        (optional)
+#   MAIL_APP_PASS  16-letter Gmail App Password                (optional)
+#   MAIL_ALWAYS    addresses that get every report, comma-separated (optional)
+
+name: Deploy online
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-online
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Check the PHP files
+        run: |
+          set -e
+          for f in $(git ls-files '*.php'); do php -l "$f" > /dev/null; done
+          echo "All PHP files OK"
+
+      - name: Write config.local.php from the secrets
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_APP_PASS: ${{ secrets.MAIL_APP_PASS }}
+          MAIL_ALWAYS: ${{ secrets.MAIL_ALWAYS }}
+        run: |
+          if [ -z "$DB_HOST" ] || [ -z "$DB_NAME" ]; then
+            echo "::error::DB_HOST / DB_NAME secrets are missing. Add them in Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          php -r '
+            $e = fn($k) => (string) getenv($k);
+            $cfg = [
+              "db" => ["host" => $e("DB_HOST"), "port" => 3306, "name" => $e("DB_NAME"),
+                       "user" => $e("DB_USER"), "pass" => $e("DB_PASS"), "charset" => "utf8mb4", "prefix" => "diary_"],
+              "main_site_url" => "https://cmerti.res.in",
+            ];
+            if ($e("MAIL_FROM") !== "") {
+              $cfg["mail"] = [
+                "from_email" => $e("MAIL_FROM"), "from_name" => "CMER&TI Disease Monitoring",
+                "always_notify" => array_values(array_filter(array_map("trim", explode(",", $e("MAIL_ALWAYS"))))),
+                "copy_to_recorder" => true,
+                "smtp" => ["host" => "smtp.gmail.com", "port" => 465, "secure" => "ssl",
+                           "username" => $e("MAIL_FROM"), "password" => str_replace(" ", "", $e("MAIL_APP_PASS")), "timeout" => 20],
+              ];
+            }
+            file_put_contents("config.local.php", "<?php\n/* Written by GitHub Actions from repository secrets. */\nreturn " . var_export($cfg, true) . ";\n");
+          '
+          php -l config.local.php
+
+      - name: Upload to the host
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            storage/**
+            **/*.bat
+            **/*.md
+            **/*.sql
+            **/*.zip
+            config.local.example.php
